@@ -14,6 +14,13 @@
 // A class representing the states of a rubix cube
 class Cube {
 private:
+    corner mCorners[8];
+    edge_piece mEdges[12];
+    bool isSolved;
+    void seeIfSolved();
+public:
+    enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
+
     enum corner {
         WOG = 1,  WGR = 3,  WRB = 5,  WBO = 7,
         YOG = 13, YGR = 15, YRB = 17, YBO = 19
@@ -24,15 +31,13 @@ private:
         OG = 9,  GR = 10, RB = 11, BO = 12,
         GY = 14, RY = 16, BY = 18, OY = 20
     };
-    corner mCorners[8];
-    edge_piece mEdges[12];
 
-public:
-    enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
     Cube();
     Cube(const Cube&) = default;
     Cube(Cube&&) = default;
     ~Cube() = default;
+
+    bool is_solved() const;
 };
 
 
