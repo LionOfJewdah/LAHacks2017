@@ -52,8 +52,8 @@ endif
 cube.o: cube.cpp cube.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-cubeTest: cube.cpp cubeTest.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $<
+cubeTest: cubeTest.cpp cube.cpp
+	$(CXX) $(CXXFLAGS) $(GTEST_LL) -o $@ $<
 
 MAIN_OBJECTS = main.o cube.o
 

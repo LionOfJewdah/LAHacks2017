@@ -58,6 +58,15 @@ Cube::Cube() : //mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
     // isSolved = true;
 }
 
+Cube::Cube(bool b) : isSolved(true) {
+    for (auto i = 0; i < 8; i++)  mCorners[i] = (corner)solved_corner_config[i];
+    for (auto i = 0; i < 12; i++) mEdges[i] = (edge_piece)solved_edge_config[i];
+    if (b == RANDOM_CUBE) {
+        this->randomPermute();
+        checkSolved();
+    }
+}
+
 Cube::Cube(const int (&_corners)[8], const int (&_edges)[12])
     : //mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
     //mEdges({2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20}),

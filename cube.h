@@ -30,7 +30,7 @@ void halfTurn(T& a, T& b, T& c, T& d)
 // A class representing the states of a rubix cube
 class Cube {
 public:
-	enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
+	enum : bool { SOLVED_CUBE = false, RANDOM_CUBE = true };
 
 	enum corner : int{
 		WOG = 1,  WGR = 3,  WRB = 5,  WBO = 7,
@@ -51,6 +51,7 @@ private:
 	void randomPermute();
 public:
     Cube();
+	Cube(bool);
     Cube(const int (&_corners)[8], const int (&_edges)[12]);
     Cube(const Cube&) = default;
     Cube(Cube&&) = default;
