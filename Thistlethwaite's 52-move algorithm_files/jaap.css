@@ -1,0 +1,161 @@
+body       {
+  font-family: Arial, "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 85%;
+  text-align:left;
+  background: url(images/backgrnd/cubeback.gif) #fff repeat;
+}
+.header h1 { display:none; }
+.header .jpp {
+   display:block; 
+   margin:0px;
+   height:80px;
+   background: url(images/logo.gif) #08F center no-repeat;
+   border:1px solid #000;
+}
+.header a:hover
+{
+  background-color: #0CF;
+}
+
+
+h1 { font-size: 200%; font-weight: bold; }
+h2 { font-size: 125%; font-weight: bold; }
+h3 { font-size: 100%; font-weight: bold; }
+
+th, td, li { font-size: 100%; }
+
+.clear    { clear:both }
+
+div.links  {
+  clear:both;
+  border-top: 2px solid #08F;
+  border-bottom: 2px solid #08F;
+}
+div.links h2 {
+  margin-top:0;
+  margin-bottom:0;
+}
+
+div.imlst  { padding:10; text-align:left; clear:both}
+div.im     { float:left;padding:10;text-align:left}
+
+div.nav{
+  clear: both;
+  width: 28em;
+  margin-left:auto;
+  margin-right:auto;
+}
+div.nav ul
+{
+  list-style-type: none;
+  text-align: center;
+  font-size: 125%;
+  font-weight: bold;
+}
+div.nav ul li
+{
+  float:left;
+}
+div.nav li a, div.nav li.navactive {
+  float:left;
+  width: 6em;
+  margin: 1;
+  color: #000;
+  padding: .3em 0em;
+  background-color: #08F;
+  border: 1px solid #000;
+}
+div.nav ul li a:hover
+{
+  background-color: #0CF;
+}
+li.navactive
+{
+  background-color: #CCC;
+}
+
+.prog {
+  font: 80% courier; text-align:left;
+  margin-left:2%;
+}
+
+td.fixed {
+  font: 80% courier; text-align:left;
+}
+
+.blockhead, .blockbody, .overview, .blockheadactive, .blockbodyactive, .blockheada a
+{
+  margin: 5px;
+  color: #000;
+  padding: 5px 5px;
+  background-color: white;
+  border: 1px solid black;
+  text-align: left;
+  font-size: 120%;
+  font-weight: bold;
+  display:block;
+}
+.blockbody, .blockbodyactive
+{
+  font-weight: normal;
+  font-size: 80%;
+}
+
+.blockhead, .blockheadactive, .blockheada a{
+  background-color: #08F;
+  font-weight: bold;
+}
+.blockheada a:hover {
+  background-color: #0CF;
+}
+.blockbodyactive, .blockheadactive{
+  border: 1px solid red;
+}
+.overview{
+  text-align: center;
+  font-weight: bold;
+}
+
+.update { width:95%; margin:auto;}
+.update1, .new1 { font-weight: bold; color: #F00; }
+.update2, .new2 { font-weight: bold; color: #E70; }
+.update3, .new3 { font-weight: bold; color: #DD0; }
+.new1, .new2, .new3 { font-size: 60%; border:1px solid black;}
+
+table.normal th { font-size: 90%; text-align:left; padding:5px; font-weight: bold;}
+table.normal td { font-size: 90%; text-align:left; padding:5px; }
+
+table.god th { font-size: 80%; text-align:right; padding:0px 5px; font-weight: bold; }
+table.god td { font-size: 80%; text-align:right; padding:0px 5px; }
+
+table.god th.head { text-align:center; }
+
+.sq30 {
+  margin:0px 0px;
+  padding:0px;
+  border:0px;
+ }
+.sq30 td, .sq30 th {
+  text-align:center;
+  width:30px;
+  height:30px;
+  padding:0px;
+  border:0px;
+  color:black;
+}
+td.g { background-color: green; }
+td.r { background-color: red;   }
+td.y { background-color: yellow;}
+td.b { background-color: blue;  }
+td.o { background-color: #f80;  }
+td.c { background-color: #0ff;  }
+td.w { background-color: #f8f8f8;}
+td.p { background-color: #c0c;  }
+td.e { background-color: #ccc;  }
+td.g2 { background-color: #cfc; }
+td.r2 { background-color: #fcc; }
+td.y2 { background-color: #ffc; }
+td.b2 { background-color: #ccf; }
+
+
+.mainimg { margin:auto; text-align:center }
