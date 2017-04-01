@@ -65,8 +65,6 @@ void Cube::checkSolved() {
     isSolved = true;
 }
 
-
-
 bool Cube::operator==(const Cube& rhs) const {
     for (auto i = 0; i < 8; i++) {
         if (mCorners[i] != rhs.mCorners[i]) return false;
