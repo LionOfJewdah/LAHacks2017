@@ -24,6 +24,9 @@ private:
         OG = 9,  GR = 10, RB = 11, BO = 12,
         GY = 14, RY = 16, BY = 18, OY = 20
     };
+    corner mCorners[8];
+    edge_piece mEdges[12];
+
 public:
     enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
     Cube();
