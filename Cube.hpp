@@ -30,7 +30,9 @@ private:
 public:
     enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
     Cube();
-    ~Cube();
+    Cube(const Cube&) = default;
+    Cube(Cube&&) = default;
+    ~Cube() = default;
 };
 
 
