@@ -55,8 +55,6 @@ public:
     Cube(const Cube&) = default;
     Cube(Cube&&) = default;
     ~Cube() = default;
-    // const int /*corner*/  (& get_corners() const)[8] ;
-    // const int /*edge_piece*/ (& get_edges() const)[12];
     const corner  (& get_corners() const)[8] ;
     const edge_piece (& get_edges() const)[12];
 
