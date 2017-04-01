@@ -1,39 +1,19 @@
 #############################################################################
-# Makefile for building: Hash Tables
-# David Silverstone
-# Nov. 27, 2016
+# Makefile for building: Cube Solver
 #############################################################################
 
 ####### Compiler, tools and options
-
 CC            = gcc
 CXX           = g++
-STD			  		= -std=c++11
-CLARGS		  	=
-DEFINES       = $(CLARGS)
-CFLAGS        = -m64 -pipe -O2 -g -Wall -W $(DEFINES)
-CXXFLAGS      = -m64 -pipe -O2 $(STD) -g -Wall -W $(DEFINES)
-LINK          = g++
-LFLAGS        = -m64 -Wl,-O1
-LIBS		  		= -L/usr/lib/x86_x64-linux-gnu -lpthread $(THREADING)
-GTEST_LL	  	= -I /usr/include/gtest/ -l gtest -l gtest_main -pthread
-AR            = ar cqs
-TAR           = tar -cf
-COMPRESS      = gzip -9f
-COPY          = cp -f
-COPY_FILE     = $(COPY)
-COPY_DIR      = $(COPY) -r
+STD			  = -std=c++11
+CXXFLAGS      = $(STD) -g -Wall -W
+GTEST_LL	  = -I /usr/include/gtest/ -l gtest -l gtest_main -pthread
 DEL_FILE      = rm -f
-SYMLINK       = ln -f -s
 DEL_DIR       = rmdir
 MOVE          = mv -f
-CHK_DIR_EXISTS= test -d
 MKDIR         = mkdir -p
-THREADING     = -pthread
-
 
 ####### Output directory
-
 BIN_DIR   	  = bin
 TEST_DIR	  	= tests
 # TARGET        = cube.o
@@ -44,17 +24,17 @@ OUTF_DIR			= cubeOutput
 
 ####### Files
 
-SOURCES       = Cube.cpp cube_test.cpp
+SOURCES       = Cube.cpp
 
-HEADERS		  	= Cube.hpp
+HEADERS		  	= cube.h
 
-TEST_SOURCES  = gtest_cube.cpp harder_gtests.cpp
+TEST_SOURCES  = cubeTest.cpp
 
-OBJECTS   		= cube_test.o cube.o
+OBJECTS   		= cube.o
 
-EXECS		  		= $(BIN_DIR)/cube_test.out #$(BIN_DIR)/$(TARGET)
+EXECS		  		= $(BIN_DIR)/cubeTest.out #$(BIN_DIR)/$(TARGET)
 
-TEST_EXECS    = $(TEST_DIR)/harder_gtests.out $(TEST_DIR)/gtest_cube.out
+TEST_EXECS    = $(TEST_DIR)/cubeTest.out
 
 first: all
 ####### Implicit rules
@@ -64,35 +44,20 @@ first: all
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
 
-.cc.o:
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
-
-.cxx.o:
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
-
-.C.o:
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
-
-.c.o:
-	$(CC) -c $(CFLAGS) $(INCPATH) -o "$@" "$<"
-
 ####### Build rules
 
 ifdef TARGET
 all: $(TARGET)
 	gdb $(TARGET)
 else
-all: cube.o
+all: cube.o cubeTest.cpp
 endif
 
-cube.o: Hashtable.cpp Cube.hpp
-		$(CXX) -c $(CXXFLAGS) -o $@ $<
+cube.o: cube.cpp cube.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-counting.o: counting.cpp Cube.hpp
-		$(CXX) -c $(CXXFLAGS) -o $@ $<
-
-main.o: main.cpp Cube.hpp
-		$(CXX) -c $(CXXFLAGS) -o $@ $<
+cubeTest: cube.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 MAIN_OBJECTS = main.o cube.o
 
