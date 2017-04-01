@@ -9,15 +9,17 @@
 #ifndef Cube_hpp
 #define Cube_hpp
 
-#include <stdio.h>
+#include <algorithm>
 
+// A class representing the states of a rubix cube
 class Cube {
 private:
+    enum corner {
+
+    }
 public:
     Cube();
     ~Cube();
-protected:
-
 };
 
 
