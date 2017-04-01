@@ -16,7 +16,7 @@ MKDIR         = mkdir -p
 ####### Output directory
 BIN_DIR   	  = bin
 TEST_DIR	  	= tests
-# TARGET        = cube.o
+# TARGET        = cubeTest
 #directory for (long) files from calling Hashtable::reportAll()
 OUTF_DIR			= cubeOutput
 
@@ -46,13 +46,13 @@ ifdef TARGET
 all: $(TARGET)
 	gdb $(TARGET)
 else
-all: cube.o cubeTest.cpp
+all: cubeTest
 endif
 
 cube.o: cube.cpp cube.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-cubeTest: cube.cpp
+cubeTest: cube.cpp cubeTest.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 MAIN_OBJECTS = main.o cube.o
