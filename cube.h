@@ -29,6 +29,19 @@ void halfTurn(T& a, T& b, T& c, T& d)
 
 // A class representing the states of a rubix cube
 class Cube {
+public:
+	enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
+
+	enum corner : int{
+		WOG = 1,  WGR = 3,  WRB = 5,  WBO = 7,
+		YOG = 13, YGR = 15, YRB = 17, YBO = 19
+	};
+
+	enum edge_piece : int {
+		WG = 2,  WR = 4,  WB = 6,  WO = 8,
+		OG = 9,  GR = 10, RB = 11, BO = 12,
+		GY = 14, RY = 16, BY = 18, OY = 20
+	};
 private:
     corner mCorners[8];
     edge_piece mEdges[12];
@@ -37,26 +50,15 @@ private:
 	using Rot = Cube& (Cube::*)(void);
 	void randomPermute();
 public:
-    enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
-
-    enum corner {
-        WOG = 1,  WGR = 3,  WRB = 5,  WBO = 7,
-        YOG = 13, YGR = 15, YRB = 17, YBO = 19
-    };
-
-    enum edge_piece {
-        WG = 2,  WR = 4,  WB = 6,  WO = 8,
-        OG = 9,  GR = 10, RB = 11, BO = 12,
-        GY = 14, RY = 16, BY = 18, OY = 20
-    };
-
     Cube();
-    Cube(const corners (&_corners)[8], const edge_piece (&_edges)[12]);
+    Cube(const int (&_corners)[8], const int (&_edges)[12]);
     Cube(const Cube&) = default;
     Cube(Cube&&) = default;
     ~Cube() = default;
-    const corners  (& get_corners())[8]  const;
-    const edge_piece (& get_edges())[12] const;
+    // const int /*corner*/  (& get_corners() const)[8] ;
+    // const int /*edge_piece*/ (& get_edges() const)[12];
+    const corner  (& get_corners() const)[8] ;
+    const edge_piece (& get_edges() const)[12];
 
     bool is_solved() const;
     bool operator==(const Cube& rhs) const;
@@ -123,10 +125,5 @@ public:
     {9,6,1,5}
     */
 };
-
-template <typename T, std::size_t N>
-constexpr std::size_t array_size (const T (&arr)[N]) {
-    return N;
-}
 
 #endif //CUBE_H
