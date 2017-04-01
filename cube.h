@@ -5,6 +5,28 @@
 #ifndef CUBE_H
 #define CUBE_H
 
+template <typename T>
+// move a->b, b->c, c->d, d->a
+void quarterTurn(T& a, T& b, T& c, T& d) {
+    T tmp(a);
+    a = d;
+    d = c;
+    c = b;
+    b = tmp;
+}
+
+template <typename T>
+// move a->c, c->a, b->d, d->b
+void halfTurn(T& a, T& b, T& c, T& d)
+{
+    T tmp(a);
+    a = c;
+    c = tmp;
+    T tmp2(b);
+    b = d;
+    d = tmp2;
+}
+
 // A class representing the states of a rubix cube
 class Cube {
 private:
@@ -55,6 +77,49 @@ public:
     Cube& turnRight();
     Cube& turnRight2();
     Cube& turnRightI();
+    /*
+    CORNER INDEX CORRESPONDENCE FOR CW TURN
+
+    Top
+    {0,1,2,3}
+
+    Bottom
+    {7,6,5,4}
+
+    Front
+    {4,5,1,0}
+
+    Back 
+    {6,7,3,2}
+
+    Left 
+    {7,4,0,3}
+
+    Right
+    {5,6,2,1}
+    */
+
+    /*
+    EDGE INDEX CORRESPONDENCE FOR CW TURN
+
+    Top
+    {0,1,2,3}
+
+    Bottom
+    {10,9,8,11}
+
+    Front
+    {8,5,0,4}
+
+    Back 
+    {10,7,2,6}
+
+    Left 
+    {11,4,3,7}
+
+    Right
+    {9,6,1,5}
+    */
 };
 
 #endif //CUBE_H

@@ -75,3 +75,111 @@ bool Cube::operator==(const Cube& rhs) const {
     }
     return true;
 }
+
+Cube& Cube::turnUp()
+{
+    quarterTurn(mCorners[0], mCorners[1], mCorners[2], mCorners[3]);
+    quarterTurn(mEdges[0], mEdges[1], mEdges[2], mEdges[3]);
+}
+
+Cube& Cube::turnUp2()
+{
+    halfTurn(mCorners[0], mCorners[1], mCorners[2], mCorners[3]);
+    halfTurn(mEdges[0], mEdges[1], mEdges[2], mEdges[3]);
+}
+
+Cube& Cube::turnUpI()
+{
+    quarterTurn(mCorners[3], mCorners[2], mCorners[1], mCorners[0]);
+    quarterTurn(mEdges[3], mEdges[2], mEdges[1], mEdges[0]);
+}
+
+Cube& Cube::turnDown()
+{
+    quarterTurn(mCorners[7], mCorners[6], mCorners[5], mCorners[4]);
+    quarterTurn(mEdges[10], mEdges[9], mEdges[8], mEdges[11]);
+}
+
+Cube& Cube::turnDown2()
+{
+    halfTurn(mCorners[7], mCorners[6], mCorners[5], mCorners[4]);
+    halfTurn(mEdges[10], mEdges[9], mEdges[8], mEdges[11]);
+}
+
+Cube& Cube::turnDownI()
+{
+    quarterTurn(mCorners[4], mCorners[5], mCorners[6], mCorners[7]);
+    quarterTurn(mEdges[11], mEdges[8], mEdges[9], mEdges[10]);
+}
+
+Cube& Cube::turnFront()
+{
+    quarterTurn(mCorners[4], mCorners[5], mCorners[1], mCorners[0]);
+    quarterTurn(mEdges[8], mEdges[5], mEdges[0], mEdges[4]);
+}
+
+Cube& Cube::turnFront2()
+{
+    halfTurn(mCorners[4], mCorners[5], mCorners[1], mCorners[0]);
+    halfTurn(mEdges[8], mEdges[5], mEdges[0], mEdges[4]);
+}
+
+Cube& Cube::turnFrontI()
+{
+    quarterTurn(mCorners[0], mCorners[1], mCorners[5], mCorners[4]);
+    quarterTurn(mEdges[4], mEdges[0], mEdges[5], mEdges[8]);
+}
+
+Cube& Cube::turnBack()
+{
+    quarterTurn(mCorners[6], mCorners[7], mCorners[3], mCorners[2]);
+    quarterTurn(mEdges[10], mEdges[7], mEdges[2], mEdges[6]);
+}
+
+Cube& Cube::turnBack2()
+{
+    halfTurn(mCorners[6], mCorners[7], mCorners[3], mCorners[2]);
+    halfTurn(mEdges[10], mEdges[7], mEdges[2], mEdges[6]);
+}
+
+Cube& Cube::turnBackI()
+{
+    quarterTurn(mCorners[2], mCorners[3], mCorners[7], mCorners[6]);
+    quarterTurn(mEdges[6], mEdges[2], mEdges[7], mEdges[10]);
+}
+
+Cube& Cube::turnLeft()
+{
+    quarterTurn(mCorners[7], mCorners[4], mCorners[0], mCorners[3]);
+    quarterTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
+}
+
+Cube& Cube::turnLeft2()
+{
+    halfTurn(mCorners[7], mCorners[4], mCorners[0], mCorners[3]);
+    quarterTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
+}
+
+Cube& Cube::turnLeftI()
+{
+    quarterTurn(mCorners[3], mCorners[0], mCorners[4], mCorners[7]);
+    quarterTurn(mEdges[7], mEdges[3], mEdges[4], mEdges[11]);
+}
+
+Cube& Cube::turnRight()
+{	
+    quarterTurn(mCorners[5], mCorners[6], mCorners[2], mCorners[1]);
+    quarterTurn(mEdges[9], mEdges[6], mEdges[1], mEdges[5]);
+}
+
+Cube& Cube::turnRight2()
+{
+    halfTurn(mCorners[5], mCorners[6], mCorners[2], mCorners[1]);
+    halfTurn(mEdges[9], mEdges[6], mEdges[1], mEdges[5]);
+}
+
+Cube& Cube::turnRightI()
+{
+    quarterTurn(mCorners[1], mCorners[2], mCorners[6], mCorners[5]);
+    quarterTurn(mEdges[5], mEdges[1], mEdges[6], mEdges[9]);
+}
