@@ -8,5 +8,8 @@
 
 #include "Cube.hpp"
 
-Cube::Cube()  {}
-Cube::~Cube() {}
+Cube::Cube() : mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
+    mEdges({2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20})
+{
+
+}
