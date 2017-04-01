@@ -17,7 +17,7 @@ private:
     corner mCorners[8];
     edge_piece mEdges[12];
     bool isSolved;
-    void seeIfSolved();
+    void checkSolved();
 public:
     enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
 
@@ -33,11 +33,15 @@ public:
     };
 
     Cube();
+    Cube(const corners (&_corners)[8], const edge_piece (&_edges)[12]);
     Cube(const Cube&) = default;
     Cube(Cube&&) = default;
     ~Cube() = default;
+    const corners  (& get_corners())[8]  const;
+    const edge_piece (& get_edges())[12] const;
 
     bool is_solved() const;
+    bool operator==(const Cube& rhs) const;
 };
 
 
