@@ -34,6 +34,8 @@ private:
     edge_piece mEdges[12];
     bool isSolved;
     void checkSolved();
+	using Rot = Cube& (Cube::*)(void);
+	void randomPermute();
 public:
     enum { SOLVED_CUBE = false, RANDOM_CUBE = true };
 
@@ -89,10 +91,10 @@ public:
     Front
     {4,5,1,0}
 
-    Back 
+    Back
     {6,7,3,2}
 
-    Left 
+    Left
     {7,4,0,3}
 
     Right
@@ -111,15 +113,20 @@ public:
     Front
     {8,5,0,4}
 
-    Back 
+    Back
     {10,7,2,6}
 
-    Left 
+    Left
     {11,4,3,7}
 
     Right
     {9,6,1,5}
     */
 };
+
+template <typename T, std::size_t N>
+constexpr std::size_t array_size (const T (&arr)[N]) {
+    return N;
+}
 
 #endif //CUBE_H

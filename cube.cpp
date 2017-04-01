@@ -7,12 +7,40 @@
 //
 
 #include "cube.h"
+#ifdef DEBUG
+#include <iostream>
+constexpr char* cubieNames[] =  { /*0*/ "",
+        /*1*/  "[1]: white-orange-green corner",
+
+        /*3*/  "[3]: white-green-red corner",
+
+        /*5*/  "[5]: white-red-blue corner",
+
+        /*7*/  "[7]: white-blue-orange corner",
+
+        /*13*/ "[13]: yellow-orange-green corner",
+
+        /*15*/ "[15]: yellow-green-red corner",
+
+        /*17*/ "[17]: yellow-red-blue corner",
+
+        /*19*/ "[19]: yellow-blue-orange corner",
+
+    };
+
+    enum edge_piece {
+        WG = 2,  WR = 4,  WB = 6,  WO = 8,
+        OG = 9,  GR = 10, RB = 11, BO = 12,
+        GY = 14, RY = 16, BY = 18, OY = 20
+    };
+#endif // DEBUG
 
 extern constexpr Cube totallySolvedCube;
 constexpr Cube totallySolvedCube;
 
 constexpr int[] solved_corner_config = {1, 3, 5, 7, 13, 15, 17, 19};
-constexpr int[] solved_edge_config = {2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20};
+constexpr int[] solved_edge_config = {2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18,
+    20};
 
 Cube::Cube() : //mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
     //mEdges({2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20}),
@@ -78,6 +106,9 @@ bool Cube::operator==(const Cube& rhs) const {
 
 Cube& Cube::turnUp()
 {
+    #ifdef DEBUG
+    std::cout << "Performing U rotation (turnUp()). Moving " << std::endl;
+    #endif
     quarterTurn(mCorners[0], mCorners[1], mCorners[2], mCorners[3]);
     quarterTurn(mEdges[0], mEdges[1], mEdges[2], mEdges[3]);
     checkSolved();
@@ -182,7 +213,7 @@ Cube& Cube::turnLeftI()
 }
 
 Cube& Cube::turnRight()
-{	
+{
     quarterTurn(mCorners[5], mCorners[6], mCorners[2], mCorners[1]);
     quarterTurn(mEdges[9], mEdges[6], mEdges[1], mEdges[5]);
     checkSolved();
@@ -200,4 +231,31 @@ Cube& Cube::turnRightI()
     quarterTurn(mCorners[1], mCorners[2], mCorners[6], mCorners[5]);
     quarterTurn(mEdges[5], mEdges[1], mEdges[6], mEdges[9]);
     checkSolved();
+}
+
+inline int rand_up_to(const unsigned n) {
+    return std::rand() % n;
+}
+
+void Cube::randomPermute() {
+    using Rot = Cube& (Cube::*)(void);
+    static constexpr Rot rotations[] = {
+        &turnUp2, &turnUpI, &turnDown, &turnDown2, &turnDownI,
+        &turnFront, &turnFront2, &turnFrontI, &turnBack,
+        &turnBack2, &turnBackI, &turnLeft, &turnLeft2, &turnLeftI,
+        &turnRight, &turnRight2, &turnRightI
+    };
+    static constexpr auto numRotTypes = array_size(rotations);
+    for (int i = 0; i < 100; i__) {
+        Rot r = rotations[rand_up_to(numRotTypes)];
+        this->r();
+    }
+    checkSolved();
+    while (this->is_solved()) {
+        for (int i = 0; i < 20; i__) {
+            Rot r = rotations[rand_up_to(numRotTypes)];
+            this->r();
+        }
+        checkSolved();
+    }
 }
