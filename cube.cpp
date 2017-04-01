@@ -6,7 +6,7 @@
 //
 //
 
-#include "Cube.hpp"
+#include "cube.h"
 
 extern constexpr Cube totallySolvedCube;
 constexpr Cube totallySolvedCube;
