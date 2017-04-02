@@ -68,6 +68,7 @@ private:
     void checkSolved();
 	using Rot = Cube& (Cube::*)(void);
 	void randomPermute();
+    Cube* 
 public:
     Cube();
 	Cube(bool);
