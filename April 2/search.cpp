@@ -78,7 +78,7 @@ void Search::init() {
 	shutTheFuckUp lk(_mut);
 	CubieCube::initMove();
 	CubieCube::initSym();
-	CoordCube::init();
+	CoordinateCube::init();
 	}
 	inited = true;
 }
@@ -99,12 +99,12 @@ int Search::verify(String facelets) {
 	int count = 0x000000;
 	try {
 		std::string center = {
-				facelets.charAt(Util::U5),
-				facelets.charAt(Util::R5),
-				facelets.charAt(Util::F5),
-				facelets.charAt(Util::D5),
-				facelets.charAt(Util::L5),
-				facelets.charAt(Util::B5)};
+				facelets.[Util::U5],
+				facelets[Util::R5],
+				facelets[Util::F5],
+				facelets[Util::D5],
+				facelets[Util::L5],
+				facelets[Util::B5]};
 
 		for (int i = 0; i < 54; i++) {
 			f[i] = (byte) center.indexOf(facelets.charAt(i));
@@ -113,7 +113,7 @@ int Search::verify(String facelets) {
 			}
 			count += 1 << (f[i] << 2);
 		}
-	} catch (Exception e) {
+	} catch (std::exception e) {
 		return -1;
 	}
 	if (count != 0x999999) {
@@ -226,9 +226,9 @@ std::string Search::searchopt() {
 	urfIdx = maxprun2 > maxprun1 ? 3 : 0;
 	preIdx = 0;
 	for (length1 = isRec ? length1 : 0; length1 < sol; length1++) {
-		CoordCube ud = node0[0 + urfIdx][0];
-		CoordCube rl = node0[1 + urfIdx][0];
-		CoordCube fb = node0[2 + urfIdx][0];
+		CoordinateCube ud = node0[0 + urfIdx][0];
+		CoordinateCube rl = node0[1 + urfIdx][0];
+		CoordinateCube fb = node0[2 + urfIdx][0];
 
 		if (ud.prun <= length1 && rl.prun <= length1 && fb.prun <= length1
 				&& phase1opt(ud, rl, fb, selfSym, length1, -1) == 0) {
@@ -266,7 +266,7 @@ int Search::phase1opt(const CoordinateCube& ud, const CoordinateCube& rl, const 
 		for (int power = 0; power < 3; power++) {
 			int m = axis + power;
 
-			if (isRec && m != move[length1 - maxl]
+			if ((isRec && m) != move[length1 - maxl]
 					|| ssym != 1 && (skipMoves & 1 << m) != 0) {
 				continue;
 			}
@@ -339,35 +339,35 @@ int Search::initPhase2() {
 		cidx >>= 4;
 
 		int cx = CoordinateCube::UDSliceMove[mid & 0x1ff][m];
-		mid = Util::permMult[mid >> 9][cx >> 9] << 9 | cx & 0x1ff;
+		mid = Util::permMult[mid >> 9][cx >> 9] << 9 | (cx & 0x1ff);
 	}
 	mid >>= 9;
-	int prun = CoordCube::getPruning(CoordCube::MCPermPrun, cidx * 24 + CoordCube::MPermConj[mid][csym]);
+	int prun = CoordinateCube::getPruning(CoordinateCube::MCPermPrun, cidx * 24 + CoordinateCube::MPermConj[mid][csym]);
 	if (prun >= maxDep2) {
 		return prun > maxDep2 ? 2 : 1;
 	}
 
 	int u4e = ud8e0[urfIdx][preIdx] >> 16;
-	int d4e = ud8e0[urfIdx][preIdx] & 0xffff;
+	int d4e = (ud8e0[urfIdx][preIdx] & 0xffff);
 	for (int i = 0; i < depth1; i++) {
 		int m = move[i];
 
 		int cx = CoordinateCube::UDSliceMove[u4e & 0x1ff][m];
-		u4e = Util::permMult[u4e >> 9][cx >> 9] << 9 | cx & 0x1ff;
+		u4e = Util::permMult[u4e >> 9][cx >> 9] << 9 | (cx & 0x1ff);
 
 		cx = CoordinateCube::UDSliceMove[d4e & 0x1ff][m];
-		d4e = Util::permMult[d4e >> 9][cx >> 9] << 9 | cx & 0x1ff;
+		d4e = Util::permMult[d4e >> 9][cx >> 9] << 9 | (cx & 0x1ff);
 	}
 
 	int edge = CubieCube::MtoEPerm[494 - (u4e & 0x1ff) + (u4e >> 9) * 70 + (d4e >> 9) * 1680];
-	int esym = edge & 0xf;
+	int esym = (edge & 0xf);
 	edge >>= 4;
 
 	prun = std::max(prun, std::max(
-						CoordCube::getPruning(CoordCube::MEPermPrun,
+						CoordinateCube::getPruning(CoordinateCube::MEPermPrun,
 								edge * 24 + CoordinateCube::MPermConj[mid][esym]),
-						CoordCube::getPruning(CoordCube::EPermCCombPrun,
-								edge * 70 + CoordCube::CCombConj[CubieCube::Perm2Comb[cidx]][CubieCube::SymMultInv[esym][csym]])));
+						CoordinateCube::getPruning(CoordinateCube::EPermCCombPrun,
+								edge * 70 + CoordinateCube::CCombConj[CubieCube::Perm2Comb[cidx]][CubieCube::SymMultInv[esym][csym]])));
 
 	if (prun >= maxDep2) {
 		return prun > maxDep2 ? 2 : 1;
@@ -432,7 +432,7 @@ int Search::phase2(int eidx, int esym, int cidx, int csym, int mid, int maxl, in
 		int cidxx = CoordinateCube::CPermMove[cidx][CubieCube::SymMove[csym][Util::ud2std[m]]];
 		int csymx = CubieCube::SymMult[cidxx & 0xf][csym];
 		cidxx >>= 4;
-		if (CoordCube::getPruning(CoordinateCube::MCPermPrun,
+		if (CoordinateCube::getPruning(CoordinateCube::MCPermPrun,
 								 cidxx * 24 + CoordinateCube::MPermConj[midx][csymx]) >= maxl) {
 			continue;
 		}
@@ -440,11 +440,11 @@ int Search::phase2(int eidx, int esym, int cidx, int csym, int mid, int maxl, in
 		int esymx = CubieCube::SymMult[eidxx & 0xf][esym];
 		eidxx >>= 4;
 		if (CoordinateCube::getPruning(CoordinateCube::EPermCCombPrun,
-								 eidxx * 70 + CoordCube::CCombConj[CubieCube::Perm2Comb[cidxx]][CubieCube::SymMultInv[esymx][csymx]]) >= maxl) {
+								 eidxx * 70 + CoordinateCube::CCombConj[CubieCube::Perm2Comb[cidxx]][CubieCube::SymMultInv[esymx][csymx]]) >= maxl) {
 			continue;
 		}
-		if (CoordCube::getPruning(CoordCube::MEPermPrun,
-								 eidxx * 24 + CoordCube::MPermConj[midx][esymx]) >= maxl) {
+		if (CoordinateCube::getPruning(CoordinateCube::MEPermPrun,
+								 eidxx * 24 + CoordinateCube::MPermConj[midx][esymx]) >= maxl) {
 			continue;
 		}
 		int ret = phase2(eidxx, esymx, cidxx, csymx, midx, maxl - 1, depth + 1, (lm < 0 && m + lm == -5) ? -lm : m);
