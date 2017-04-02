@@ -1,0 +1,13 @@
+#define N_TWIST     2187
+#define N_FLIP      2048
+#define N_SLICE1    495
+#define N_SLICE2    24
+#define N_PARITY    2
+#define N_URFtoDLF  20160
+#define N_FRtoBR    11880
+#define N_URtoUL    1320
+#define N_UBtoDF    1320
+#define N_URtoDF    20160
+#define N_URFtoDLB  40320
+#define N_URtoBR    479001600
+#define N_MOVE      18
