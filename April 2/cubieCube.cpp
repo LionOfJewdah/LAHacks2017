@@ -82,7 +82,7 @@ void CubieCube::invCubieCube() {
 		temps = new CubieCube();
 	}
 	for (char edge = 0; edge < 12; edge++) {
-		temps->ea[ea[edge] >> 1] = (char) (edge << 1 | ea[edge] & 1);
+		temps->ea[ea[edge] >> 1] = (char) (edge << 1 | (ea[edge] & 1));
 	}
 	for (char corn = 0; corn < 8; corn++) {
 		int ori = ca[corn] >> 3;
@@ -105,7 +105,7 @@ CubieCube& prod) {
 		if ((oriA >= 3) ^ (oriB >= 3)) {
 			ori += 3;
 		}
-		prod.ca[corn] = (char) (a.ca[b.ca[corn] & 7] & 7 | ori << 3);
+		prod.ca[corn] = (char) ((a.ca[(b.ca[corn] & 7)] & 7) | ori << 3);
 	}
 }
 
@@ -123,9 +123,9 @@ void CubieCube::CornConjugate(const CubieCube& a, int idx, CubieCube& b) {
 	CubieCube s = CubeSym[idx];
 	for (int corn = 0; corn < 8; corn++) {
 		int oriA = sinv.ca[a.ca[s.ca[corn] & 7] & 7] >> 3;
-		int oriB = a.ca[s.ca[corn] & 7] >> 3;
+		int oriB = a.ca[(s.ca[corn] & 7)] >> 3;
 		int ori = (oriA < 3) ? oriB : (3 - oriB) % 3;
-		b.ca[corn] = (char) (sinv.ca[a.ca[s.ca[corn] & 7] & 7] & 7 | ori << 3);
+		b.ca[corn] = (char) ((sinv.ca[(a.ca[(s.ca[corn] & 7)] & 7)] & 7) | ori << 3);
 	}
 }
 
@@ -134,7 +134,7 @@ void CubieCube::EdgeConjugate(const CubieCube& a, int idx, CubieCube& b) {
 	CubieCube sinv = CubeSym[SymInv[idx]];
 	CubieCube s = CubeSym[idx];
 	for (int ed = 0; ed < 12; ed++) {
-		b.ea[ed] = (char) (sinv.ea[a.ea[s.ea[ed] >> 1] >> 1] ^ (a.ea[s.ea[ed] >> 1] & 1) ^ (s.ea[ed] & 1));
+		b.ea[ed] = (char) (sinv.ea[a.ea[s.ea[ed] >> 1] >> 1] ^ ((a.ea[s.ea[ed] >> 1] & 1)) ^ (s.ea[ed] & 1));
 	}
 }
 
@@ -162,7 +162,7 @@ void CubieCube::URFConjugate() {
 int CubieCube::getFlip() const {
 	int idx = 0;
 	for (int i = 0; i < 11; i++) {
-		idx = idx << 1 | ea[i] & 1;
+		idx = idx << 1 | (ea[i] & 1);
 	}
 	return idx;
 }
@@ -170,12 +170,12 @@ int CubieCube::getFlip() const {
 void CubieCube::setFlip(int idx) {
 	int parity = 0;
 	for (int i = 10; i >= 0; i--) {
-		int val = idx & 1;
-		ea[i] = (char) (ea[i] & 0xfe | val);
+		int val = (idx & 1);
+		ea[i] = (char) ((ea[i] & 0xfe) | val);
 		parity ^= val;
 		idx >>= 1;
 	}
-	ea[11] = (char) (ea[11] & 0xfe | parity);
+	ea[11] = (char) ((ea[11] & 0xfe) | parity);
 }
 
 int CubieCube::getFlipSym() {
@@ -269,7 +269,7 @@ void CubieCube::setCPerm(int idx) {
 int CubieCube::getCPermSym() {
 	if (!EPermR2S) {
 		int idx = EPermR2S[getCPerm()];
-		return idx ^ e2c[idx & 0xf];
+		return idx ^ e2c[(idx & 0xf)];
 	}
 	if (!temps) {
 		temps = new CubieCube();
