@@ -34,15 +34,20 @@ class Cube {
 public:
 	enum : bool { SOLVED_CUBE = false, RANDOM_CUBE = true };
 
-	enum corner : int{
+	enum corner : int {
 		WOG = 1,  WGR = 3,  WRB = 5,  WBO = 7,
-		YOG = 13, YGR = 15, YRB = 17, YBO = 19
+		YOG = 13, YGR = 15, YRB = 17, YBO = 19,
+        ULF = 1,  UFR = 3,  URB = 5,  UBL = 7,
+        DFL = 13, DRF = 15, DBR = 17, DLB = 19
 	};
 
 	enum edge_piece : int {
 		WG = 2,  WR = 4,  WB = 6,  WO = 8,
-		OG = 9,  GR = 10, RB = 11, BO = 12,
-		GY = 14, RY = 16, BY = 18, OY = 20
+        OG = 9,  GR = 10, RB = 11, BO = 12,
+		GY = 14, RY = 16, BY = 18, OY = 20,
+        UF = 2,  UR = 4,  UB = 6,  UL = 8,
+        FL = 9,  FR = 10, BR = 11, BL = 12,
+		DF = 14, DR = 16, DB = 18, DL = 20
 	};
 private:
     corner mCorners[8];
