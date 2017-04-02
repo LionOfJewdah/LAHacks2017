@@ -1,0 +1,14 @@
+bool Cube::isSolved()
+{
+	return isSolved();
+}
+
+int* Cube::edges()
+{
+	return edges;
+}
+
+int* Cube::corners()
+{
+	return corners;
+}
