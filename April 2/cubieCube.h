@@ -1,6 +1,7 @@
 #ifndef CUBIECUBE_H
 #define CUBIECUBE_H
 #include <string>
+#include "util.h"
 
 class CubieCube {
 public:
@@ -87,7 +88,7 @@ public:
 
 	int getTwistSym();
 
-	int getUDSlice();
+	int getUDSlice() const;
 
 	void setUDSlice(int idx);
 	int getU4Comb() const;

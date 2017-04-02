@@ -235,7 +235,7 @@ int CubieCube::getTwistSym() {
 	return 0;
 }
 
-int CubieCube::getUDSlice() {
+int CubieCube::getUDSlice() const {
 	return Util::getComb(ea, 8, true);
 }
 
@@ -243,11 +243,11 @@ void CubieCube::setUDSlice(int idx) {
 	Util::setComb(ea, idx, 8, true);
 }
 
-int CubieCube::getU4Comb() {
+int CubieCube::getU4Comb() const {
 	return Util::getComb(ea, 0, true);
 }
 
-int CubieCube::getD4Comb() {
+int CubieCube::getD4Comb() const {
 	return Util::getComb(ea, 4, true);
 }
 

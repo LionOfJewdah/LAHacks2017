@@ -1,14 +1,10 @@
 namespace Util {
 	bool initedUtil = false;
-	
+
 	constexpr long fact[14] = {1, 1, 2, 6, 24, 120, 720, 5040,
 		40320, 362880, 3628800, 39916800, 479001600, 6227020800
 	};
-	
-		constexpr long fact[14] = {1, 1, 2, 6, 24, 120, 720, 5040,
-		40320, 362880, 3628800, 39916800, 479001600, 6227020800
-	};
-	
+
 	void initUtil() {
 		if (initedUtil) return;
 		for (int i = 0; i < 10; i++) {
@@ -62,7 +58,7 @@ namespace Util {
 	constexpr char Bx1 = 15;
 	constexpr char Bx2 = 16;
 	constexpr char Bx3 = 17;
-	
+
 	//Facelets
 	constexpr char U1 = 0;
 	constexpr char U2 = 1;
@@ -118,7 +114,7 @@ namespace Util {
 	constexpr char B7 = 51;
 	constexpr char B8 = 52;
 	constexpr char B9 = 53;
-	
+
 	//Colors
 	constexpr char U = 0;
 	constexpr char R = 1;
@@ -126,7 +122,7 @@ namespace Util {
 	constexpr char D = 3;
 	constexpr char L = 4;
 	constexpr char B = 5;
-	
+
 	constexpr char cornerFacelet[8][3] = {
 		{ U9, R1, F3 }, { U7, F1, L3 }, { U1, L1, B3 }, { U3, B1, R3 },
 		{ D3, F9, R7 }, { D1, L9, F7 }, { D7, B9, L7 }, { D9, R9, B7 }
@@ -135,18 +131,18 @@ namespace Util {
 		{ U6, R2 }, { U8, F2 }, { U4, L2 }, { U2, B2 }, { D6, R8 }, { D2, F8 },
 		{ D4, L8 }, { D8, B8 }, { F6, R4 }, { F4, L6 }, { B6, L4 }, { B4, R6 }
 	};
-	
+
 	constexpr long fact[14] = {1, 1, 2, 6, 24, 120, 720, 5040,
 		40320, 362880, 3628800, 39916800, 479001600, 6227020800
 	};
-	
+
 	int preMove[] = { -1, Rx1, Rx3, Fx1, Fx3, Lx1, Lx3, Bx1, Bx3};
 	int ud2std[] = {Ux1, Ux2, Ux3, Rx2, Fx2, Dx1, Dx2, Dx3, Lx2, Bx2};
 	int std2ud [18];
 	bool ckmv2 [11][10];
 	int Cnk[13][13];
 	static permMult[24][24];
-	
+
    void toCubieCube(char[] f, CubieCube& ccRet) {
 		char ori;
 		for (int i = 0; i < 8; i++)
