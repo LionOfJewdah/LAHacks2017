@@ -217,7 +217,7 @@ void CubieCube::setTwist(int idx) {
 	ca[7] = (char) ((ca[7] & 0x7 )| (((15 - twst) % 3) << 3));
 }
 
-int CubieCube::getTwistSym() {
+int CubieCube::gSym() {
 	// if (TwistR2S != null) {
 	// 	return TwistR2S[getTwist()];
 	// }

@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+using std::vector;
+
 constexpr int N_MOVES = 18;
 constexpr int N_MOVES2 = 10;
 constexpr int N_SLICE = 495;
@@ -74,8 +76,8 @@ private:
 
 	static void initRawSymPrun(
 	   int PrunTable[], const int INV_DEPTH,
-	   const std::vector<std::string>& RawMove, const std::vector<std::string>& RawConj,
-	   const std::vector<std::string>& SymMove, const std::string& SymState,
+	   const vector<vector<unsigned short> >& RawMove, const vector<vector<unsigned short> >& RawConj,
+	   const vector<vector<unsigned short> >& SymMove, const std::string& SymState,
 	   const int PrunFlag
 	);
 

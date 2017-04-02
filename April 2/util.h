@@ -219,11 +219,11 @@ namespace Util {
 	}
 
 	char setVal(int val0, int val, bool isEdge) {
-		return (char) (isEdge ? (val << 1 | val0 & 1) : (val | val0 & 0xf8));
+		return (char) (isEdge ? (val << 1 | (val0 & 1)) : (val | (val0 & 0xf8)));
 	}
 
 	int getVal(int val0, bool isEdge) {
-		return isEdge ? val0 >> 1 : val0 & 7;
+		return isEdge ? val0 >> 1 : (val0 & 7);
 	}
 
 	void set8Perm(char arr[], int idx, bool isEdge) {
@@ -235,7 +235,7 @@ namespace Util {
 			v <<= 2;
 			arr[i] = setVal(arr[i], (val >> v & 0x7), isEdge);
 			int m = (1 << v) - 1;
-			val = val & m | val >> 4 & ~m;
+			val = (val & m) | val >> (4 & ~m);
 		}
 		arr[7] = setVal(arr[7], val, isEdge);
 	}
@@ -245,7 +245,7 @@ namespace Util {
 		int val = 0x76543210;
 		for (int i = 0; i < 7; i++) {
 			int v = getVal(arr[i], isEdge) << 2;
-			idx = (8 - i) * idx + (val >> v & 0x7);
+			idx = (8 - i) * idx + (val >> (v & 0x7));
 			val -= 0x11111110 << v;
 		}
 		return idx;
@@ -296,7 +296,7 @@ namespace Util {
 		return idxP << 9 | Cnk[end + 1][4] - 1 - idxC;
 	}
 
-	int setComb(char arr[], int idx, int mask, bool isEdge) {
+	void setComb(char arr[], int idx, int mask, bool isEdge) {
 		int end = std::strlen(arr);
 		int r = 4, fill = end, val = 0x0123;
 		int idxC = Cnk[end+1][4] - 1 - (idx & 0x1ff);
@@ -307,9 +307,9 @@ namespace Util {
 				int p = fact[r];
 				int v = idxP / p << 2;
 				idxP %= p;
-				arr[i] = setVal(arr[i], val >> v & 3 | mask, isEdge);
+				arr[i] = setVal(arr[i], val >> (v & 3) | mask, isEdge);
 				int m = (1 << v) - 1;
-				val = val & m | val >> 4 & ~m;
+				val = (val & m) | val >> (4 & ~m);
 			} else {
 				if ((fill & 0xc) == mask) {
 					fill -= 4;
@@ -318,5 +318,4 @@ namespace Util {
 			}
 		}
 	}
-
 }
