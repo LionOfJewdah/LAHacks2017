@@ -1,6 +1,9 @@
 #include "cube.h"
 #include "gtest/gtest.h"
 
+#include <iostream>
+using namespace std;
+
 class CubeTest : public ::testing::Test {
 protected:
 	const int solvedCorners[8] = {1, 3, 5, 7, 13, 15, 17, 19};
@@ -42,10 +45,18 @@ TEST_F(CubeTest, CheckMemberVariablesAfterConstruction) {
 }
 
 TEST_F(CubeTest, CheckAllUpFunctions) {
+	cout << solvedCube.get_corners()[0] << " ";
+	cout << solvedCube.get_corners()[1] << " ";
+	cout << solvedCube.get_corners()[2] << " ";
+	cout << solvedCube.get_corners()[3] << " " << endl;
 	solvedCube.turnUp();
 	int newCorners[] = {3, 5, 7, 1, 13, 15, 17, 19};
 	int newEdges[] = {4, 6, 8, 2, 9, 10, 11, 12, 14, 16, 18, 20};
 	EXPECT_FALSE(solvedCube.isSolved());
+	cout << solvedCube.get_corners()[0] << " ";
+	cout << solvedCube.get_corners()[1] << " ";
+	cout << solvedCube.get_corners()[2] << " ";
+	cout << solvedCube.get_corners()[3] << " " << endl;
 	for (int i = 0; i < 8; i++) {
 		EXPECT_EQ(newCorners[i], solvedCube.get_corners()[i]);
 	}

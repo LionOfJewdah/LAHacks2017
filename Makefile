@@ -28,7 +28,7 @@ HEADERS		  	= cube.h
 
 TEST_SOURCES  = cubeTest.cpp
 
-OBJECTS   		= cube.o
+OBJECTS   		= $(BIN_DIR)/cube.o
 
 EXECS		  = $(TEST_DIR)/cubeTest #$(BIN_DIR)/$(TARGET)
 
@@ -49,8 +49,8 @@ else
 all: cubeTest
 endif
 
-cube.o: cube.cpp cube.h $(BIN_DIR)/.dirstamp
-	$(CXX) -c $(CXXFLAGS) -o $(BIN_DIR)/$@ $<
+$(BIN_DIR)/cube.o: cube.cpp cube.h $(BIN_DIR)/.dirstamp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 cubeTest: cubeTest.cpp $(BIN_DIR)/cube.o
 	$(CXX) $(CXXFLAGS) -o $(TEST_DIR)/$@ $^ $(GTEST_LL)
