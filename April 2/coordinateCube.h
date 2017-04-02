@@ -88,6 +88,7 @@ private:
 	int slice;
 	int prun;
 	friend class CubieCube;
+	friend class Search;
 };
 
 #endif

@@ -4,6 +4,8 @@
 #include <mutex>
 #include <string>
 #include "cubieCube.h"
+#include "coordinateCube.h"
+#include "util.h"
 
 class Search {
 public:
@@ -38,7 +40,7 @@ private:
 
     constexpr static int PRE_IDX_MAX = TRY_PRE_MOVE ? 9 : 1;
 
-    constexpr static bool inited = false;
+    static bool inited = false;
 
     int corn0[6][PRE_IDX_MAX];
     int ud8e0[6][PRE_IDX_MAX];
@@ -50,6 +52,7 @@ private:
     CoordinateCube node[6][PRE_IDX_MAX];
 
     char f[54];
+    CoordinateCube node0[6][PRE_IDX_MAX];
 
     long selfSym;
     int preIdxMax;
