@@ -301,7 +301,7 @@ Cube& Cube::turnLeft2()
     SAY_2MOVING(7, 4, 0, 3, 11, 4, 3, 7);
     #endif
     halfTurn(mCorners[7], mCorners[4], mCorners[0], mCorners[3]);
-    quarterTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
+    halfTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
     checkSolved();
 	return *this;
 }
