@@ -8,6 +8,9 @@ char CubieCube::TwistR2S[2048];// = new char[2187];
 char CubieCube::EPermR2S[2048];// = new char[40320];
 char CubieCube::FlipS2RF[336*8];
 
+CubieCube CubieCube::urf1 = CubieCube(2531, 1373, 67026819, 1367);
+CubieCube CubieCube::urf2 = CubieCube(2089, 1906, 322752913, 2040);
+
 char CubieCube::urfMove[6][18] = {
 		{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
 		{6, 7, 8, 0, 1, 2, 3, 4, 5, 15, 16, 17, 9, 10, 11, 12, 13, 14},
@@ -254,7 +257,7 @@ int CubieCube::getD4Comb() {
 // Cperm : Permutations of 8 Corners. Raw[0, 40320) Sym[0, 2187 * 16)
 // MPerm : Permutations of 4 UDSlice Edges. [0, 24)
 
-int CubieCube::getCPerm() {
+int CubieCube::getCPerm() const {
 	return Util::get8Perm(ca, false);
 }
 
@@ -272,7 +275,8 @@ int CubieCube::getCPermSym() {
 	}
 	for (int k = 0; k < 16; k++) {
 		CornConjugate(this, SymInv[k], temps);
-		int idx = Arrays.binarySearch(EPermS2R, (char) temps.getCPerm());
+		// int idx = Arrays.binarySearch(EPermS2R, (char) temps.getCPerm());
+		int idx = std::upper_bound(EPermS2R, (char) temps->getCPerm());
 		if (idx >= 0) {
 			delete temps;
 			return idx << 4 | k;
@@ -282,7 +286,7 @@ int CubieCube::getCPermSym() {
 	return 0;
 }
 
-int CubieCube::getEPerm() {
+int CubieCube::getEPerm() const {
 	return Util::get8Perm(ea, true);
 }
 
@@ -299,7 +303,8 @@ int CubieCube::getEPermSym() {
 	}
 	for (int k = 0; k < 16; k++) {
 		EdgeConjugate(this, SymInv[k], temps);
-		int idx = Arrays.binarySearch(EPermS2R, (char) temps.getEPerm());
+		// int idx = Arrays.binarySearch(EPermS2R, (char) temps.getEPerm());
+		int idx = std::upper_bound(EPermS2R, (char) temps->getEPerm());
 		if (idx >= 0) {
 		delete temps;
 			return idx << 4 | k;
@@ -308,7 +313,7 @@ int CubieCube::getEPermSym() {
 	return 0;
 }
 
-int CubieCube::getMPerm() {
+int CubieCube::getMPerm() const {
 	return Util::getComb(ea, 8, true) >> 9;
 }
 
@@ -316,7 +321,7 @@ void CubieCube::setMPerm(int idx) {
 	Util::setComb(ea, idx << 9, 8, true);
 }
 
-int CubieCube::getCComb() {
+int CubieCube::getCComb() const {
 	return 69 - (Util::getComb(ca, 0, false) & 0x1ff);
 }
 
@@ -620,7 +625,8 @@ void CubieCube::initUDSliceFlipSym2Raw() {
 				SymStateUDSliceFlip[count] |= 1 << s;
 			}
 			occ[idx >> 5] |= 1 << (idx & 0x1f);
-			int fidx = Arrays.binarySearch(FlipS2R, (char) (idx & 0x7ff));
+			// int fidx = Arrays.binarySearch(FlipS2R, (char) (idx & 0x7ff));
+			int fidx = std::upper_bound(FlipS2R, (unsigned char) (idx & 0x7ff));
 			if (fidx >= 0) {
 				FlipSlice2UDSliceFlip[fidx * CoordinateCube::N_SLICE + (idx >> 11)] = count << 4 | s;
 			}
@@ -636,8 +642,9 @@ std::string CubieCube::toString() const {
 	for (int i = 0; i < 8; i++) {
 		thePussy.append("|" + std::to_string(ca[i] & 7) + " " + std::to_string(ca[i] >> 3));
 	}
-	sb.append("\n");
+	thePussy.append("\n");
 	for (int i = 0; i < 12; i++) {
 		thePussy.append("|" + std::to_string(ea[i] >> 1) + " " + std::to_string(ea[i] & 1));
 	}
+	return thePussy;
 }

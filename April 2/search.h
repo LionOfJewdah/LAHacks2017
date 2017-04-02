@@ -45,11 +45,11 @@ private:
     int corn0[6][PRE_IDX_MAX];
     int ud8e0[6][PRE_IDX_MAX];
 
-    CoordCube nodeUD[21];
-    CoordCube nodeRCoLor[21];
-    CoordCube nodeFB[21];
+    CoordinateCube nodeUD[21];
+    CoordinateCube nodeRCoLor[21];
+    CoordinateCube nodeFB[21];
 
-    CoordCube node[6][PRE_IDX_MAX];
+    CoordinateCube node[6][PRE_IDX_MAX];
 
     char f[54];
 
@@ -72,7 +72,7 @@ private:
     mutable std::mutex _mut;
     using shutTheFuckUp = std::lock_guard<std::mutex>;
 
-    private boolean isRec = false;
+    private bool isRec;
 
     /**
      *     Verbose_Mask determines if a " . " separates the phase1 and phase2 parts of the solver string like in F' R B R L2 F .

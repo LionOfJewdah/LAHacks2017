@@ -71,8 +71,8 @@ public:
 	static char SymStateFlip[336];
 	static char SymStatePerm[2768];
 
-	static CubieCube urf1 = CubieCube(2531, 1373, 67026819, 1367);
-	static CubieCube urf2 = CubieCube(2089, 1906, 322752913, 2040);
+	static CubieCube urf1;// = CubieCube(2531, 1373, 67026819, 1367);
+	static CubieCube urf2;// = CubieCube(2089, 1906, 322752913, 2040);
 	static char urfMove[6][18];
 
 	static void CornConjugate(const CubieCube& a, int idx, CubieCube& b);

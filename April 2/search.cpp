@@ -1,5 +1,7 @@
 #include "search.h"
 
+Search::Search() : isRec(false) {};
+
 void Search::initSearch() {
 	conjMask = (TRY_INVERSE ? 0 : 0x38) | (TRY_THREE_AXES ? 0 : 0x36);
 	CubieCube pc;
@@ -103,7 +105,7 @@ int Search::verify(String facelets) {
 				facelets.charAt(Util::D5),
 				facelets.charAt(Util::L5),
 				facelets.charAt(Util::B5)};
-				
+
 		for (int i = 0; i < 54; i++) {
 			f[i] = (byte) center.indexOf(facelets.charAt(i));
 			if (f[i] == -1) {
