@@ -79,7 +79,7 @@ private:
 	static void initRawSymPrun(int PrunTable[], const int INV_DEPTH,
 		 const unsigned short (&RawMove)[N1][N2],
 		 const unsigned short (&RawConj)[N3][N4],
-		 const unsigned short (&SymMove)[N5][N6], const string& SymState,
+		 const unsigned short (&SymMove)[N5][N6], const std::string& SymState,
 		 const int PrunFlag);
 
 	int twist;
