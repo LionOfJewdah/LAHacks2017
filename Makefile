@@ -12,6 +12,7 @@ DEL_FILE      = rm -f
 DEL_DIR       = rmdir
 MOVE          = mv -f
 MKDIR         = mkdir -p
+CLDEFINES	  =
 
 ####### Output directory
 BIN_DIR   	  = bin
@@ -50,7 +51,7 @@ all: cubeTest
 endif
 
 $(BIN_DIR)/cube.o: cube.cpp cube.h $(BIN_DIR)/.dirstamp
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(CLDEFINES) -o $@ $<
 
 cubeTest: cubeTest.cpp $(BIN_DIR)/cube.o
 	$(CXX) $(CXXFLAGS) -o $(TEST_DIR)/$@ $^ $(GTEST_LL)

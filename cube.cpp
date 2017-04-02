@@ -35,7 +35,7 @@ constexpr char* cubieNames[] =  { /*0*/ "",
 };
 
 #define SAY_MOVING(a, b, c, d, e, f, g, h)\
-    std::cout << "Moving " << names[mCorners[(a)]] << " --> "
+    std::cout << "Moving " << names[mCorners[(a)]] << " --> "\
         << names[mCorners[(b)]] << " --> " << names[mCorners[(c)]] << " --> "\
         << names[mCorners[(d)]] << " --> " << names[mCorners[(a)]] << ";\nand"\
         << names[mEdges[(e)]] << " --> " << names[mCorners[(f)]] << " --> "\
@@ -43,8 +43,8 @@ constexpr char* cubieNames[] =  { /*0*/ "",
         << names[mEdges[(e)]] << "." << std::endl;
 
 #define SAY_2MOVING(a, b, c, d, e, f, g, h)\
-    std::cout << "Moving " << names[mCorners[(a)]] << " <--> "
-        << names[mCorners[(c)]] << " ; " << names[mCorners[(b)]] << " <--> " 
+    std::cout << "Moving " << names[mCorners[(a)]] << " <--> "\
+        << names[mCorners[(c)]] << " ; " << names[mCorners[(b)]] << " <--> "\
         << names[mCorners[(d)]] << ";\nand"\
         << names[mEdges[(e)]] << " <--> " << names[mCorners[(g)]] << " ; "\
         << names[mEdges[(f)]] << " <--> " << names[mCorners[(h)]] << "." << std::endl;
@@ -260,6 +260,7 @@ Cube& Cube::turnBack()
 
 Cube& Cube::turnBack2()
 {
+    #ifdef DEBUG
     std::cout << "Performing B2 rotation (turnBack2())." << std::endl;
     SAY_2MOVING(6, 7, 3, 2, 10, 7, 2, 6);
     #endif

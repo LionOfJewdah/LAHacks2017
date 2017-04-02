@@ -5,14 +5,16 @@
 #ifndef CUBE_H
 #define CUBE_H
 
+#include <iostream>
+
 template <typename T>
 // move a->b, b->c, c->d, d->a
 void quarterTurn(T& a, T& b, T& c, T& d) {
-    T tmp(a);
+    T temp(a);
     a = b;
     b = c;
     c = d;
-    d = tmp;
+    d = temp;
 }
 
 template <typename T>
