@@ -53,8 +53,10 @@ public:
     Cube();
 	Cube(bool);
     Cube(const int (&_corners)[8], const int (&_edges)[12]);
-    Cube(const Cube&) = default;
-    Cube(Cube&&) = default;
+	Cube(const Cube&) = default;
+	Cube(Cube&&) = default;
+    Cube& operator=(Cube&&) = default;
+	Cube& operator=(const Cube&) = default;
     ~Cube() = default;
     const corner  (& get_corners() const)[8] ;
     const edge_piece (& get_edges() const)[12];
