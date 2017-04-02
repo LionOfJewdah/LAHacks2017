@@ -74,12 +74,13 @@ private:
 	static void initSliceTwistPrun();
 	static void initSliceFlipPrun();
 
-	static void initRawSymPrun(
-	   int PrunTable[], const int INV_DEPTH,
-	   const vector<vector<unsigned short> >& RawMove, const vector<vector<unsigned short> >& RawConj,
-	   const vector<vector<unsigned short> >& SymMove, const std::string& SymState,
-	   const int PrunFlag
-	);
+	template <unsigned N1, unsigned N2, unsigned N3, unsigned N4, unsigned N5,
+		unsigned N6>
+	static void initRawSymPrun(int PrunTable[], const int INV_DEPTH,
+		 const unsigned short (&RawMove)[N1][N2],
+		 const unsigned short (&RawConj)[N3][N4],
+		 const unsigned short (&SymMove)[N5][N6], const string& SymState,
+		 const int PrunFlag);
 
 	int twist;
 	int tsym;

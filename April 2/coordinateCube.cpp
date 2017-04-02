@@ -29,12 +29,12 @@ void CoordinateCube::init() {
 void CoordinateCube::calcPruning(bool isPhase1) {
 	bool waste = isPhase1;
 	prun = max(
-		max(
-			getPruning(UDSliceTwistPrun, twist * N_SLICE + UDSliceConj[slice & 0x1ff][tsym]),
-				getPruning(UDSliceFlipPrun,
-					flip * N_SLICE + UDSliceConj[slice & 0x1ff][fsym])),
-		 			getPruning(TwistFlipPrun,
-					twist << 11 | CubieCube::FlipS2RF[flip << 3 | CubieCube::Sym8MultInv[fsym << 3 | tsym]]));
+		max(getPruning(UDSliceTwistPrun, twist * N_SLICE +
+			UDSliceConj[slice & 0x1ff][tsym]),
+			getPruning(UDSliceFlipPrun, flip * N_SLICE +
+			UDSliceConj[slice & 0x1ff][fsym])),
+		 	getPruning(TwistFlipPrun,
+			twist << 11 | CubieCube::FlipS2RF[flip << 3 | CubieCube::Sym8MultInv[fsym << 3 | tsym]]));
 	// twist multiplied by 2048
 	// flip is multiplied by 8 because CubieCube stores the symmetry class differently
 }
@@ -60,10 +60,13 @@ int CoordinateCube::getPruning(int table[], int index) {
 }
 
 
+template <unsigned N1, unsigned N2, unsigned N3, unsigned N4, unsigned N5,
+	unsigned N6>
 void CoordinateCube::initRawSymPrun(
 	 int PrunTable[], const int INV_DEPTH,
-	 const vector<vector<unsigned short> >& RawMove, const vector<vector<unsigned short> >& RawConj,
-	 const vector<vector<unsigned short> >& SymMove, const string& SymState,
+	 const unsigned short (&RawMove)[N1][N2],
+	 const unsigned short (&RawConj)[N3][N4],
+	 const unsigned short (&SymMove)[N5][N6], const char* SymState,
 	 const int PrunFlag)
 {
 	const int SYM_SHIFT = PrunFlag & 0xf;
@@ -72,13 +75,13 @@ void CoordinateCube::initRawSymPrun(
 	const bool MoveMapRaw = ((PrunFlag >> 6) & 1) == 1;
 
 	const int SYM_MASK = (1 << SYM_SHIFT) - 1;
-	const int N_RAW = RawMove.size();
-	const int N_SYM = SymMove.size();
+	const int N_RAW = /*RawMove.size();*/ N1;
+	const int N_SYM = /*SymMove.size();*/ N5;
 	const int N_SIZE = N_RAW * N_SYM;
-	const int N_MOVES = MoveMapRaw ? 10 : RawMove[0].size();
+	const int N_MOVES = MoveMapRaw ? 10 : std::size(RawMove[0]);
 
 	for (int i = 0; i < (N_RAW * N_SYM + 7) / 8; i++) {
-			PrunTable[i] = -1;
+		PrunTable[i] = -1;
 	}
 	setPruning(PrunTable, 0, 0);
 
@@ -134,28 +137,28 @@ void CoordinateCube::initRawSymPrun(
 }
 
 void CoordinateCube::initUDSliceMoveConj() {
-		CubieCube c, d;
-		for (int i = 0; i < N_SLICE; i++) {
-				c.setUDSlice(i);
-				for (int j = 0; j < N_MOVES; j += 3) {
-						CubieCube::EdgeMult(c, CubieCube::moveCube[j], d);
-						UDSliceMove[i][j] = (char) d.getUDSlice();
-				}
-				for (int j = 0; j < 16; j += 2) {
-						CubieCube::EdgeConjugate(c, CubieCube::SymInv[j], d);
-						UDSliceConj[i][j >> 1] = (char) (d.getUDSlice() & 0x1ff);
-				}
+	CubieCube c, d;
+	for (int i = 0; i < N_SLICE; i++) {
+		c.setUDSlice(i);
+		for (int j = 0; j < N_MOVES; j += 3) {
+				CubieCube::EdgeMult(c, CubieCube::moveCube[j], d);
+				UDSliceMove[i][j] = (char) d.getUDSlice();
 		}
-		for (int i = 0; i < N_SLICE; i++) {
-				for (int j = 0; j < N_MOVES; j += 3) {
-						int udslice = UDSliceMove[i][j];
-						for (int k = 1; k < 3; k++) {
-								int cx = UDSliceMove[(udslice & 0x1ff)][j];
-								udslice = Util::permMult[udslice >> 9][cx >> 9] << 9 | (cx & 0x1ff);
-								UDSliceMove[i][j + k] = (char) udslice;
-						}
-				}
+		for (int j = 0; j < 16; j += 2) {
+				CubieCube::EdgeConjugate(c, CubieCube::SymInv[j], d);
+				UDSliceConj[i][j >> 1] = (char) (d.getUDSlice() & 0x1ff);
 		}
+	}
+	for (int i = 0; i < N_SLICE; i++) {
+		for (int j = 0; j < N_MOVES; j += 3) {
+			int udslice = UDSliceMove[i][j];
+			for (int k = 1; k < 3; k++) {
+				int cx = UDSliceMove[(udslice & 0x1ff)][j];
+				udslice = Util::permMult[udslice >> 9][cx >> 9] << 9 | (cx & 0x1ff);
+				UDSliceMove[i][j + k] = (char) udslice;
+			}
+		}
+	}
 }
 
 void CoordinateCube::initFlipMove() {

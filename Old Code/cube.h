@@ -49,10 +49,30 @@ private:
     struct corner_o {
         corner co;
         char o;
+        bool operator==(const corner_o& rhs) const {
+            return o == rhs.o && co == rhs.co;
+        }
+        bool operator!=(const corner_o& rhs) const {
+            return !(*this == rhs);
+        }
+        bool operator!=(const int rhs) const {
+            return edge != rhs;
+        }
+        corner_o& operator=(const int x) {co = x; o = 0; return *this;};
     };
     struct edge_o {
         edge_piece edge;
         char o;
+        bool operator==(const edge_o& rhs) const {
+            return o == rhs.o && edge == rhs.edge;
+        }
+        bool operator!=(const edge_o& rhs) const {
+            return !(*this == rhs);
+        }
+        bool operator!=(const int rhs) const {
+            return co != rhs;
+        }
+        edge_o& operator=(const int x) {edge = x; o = 0; return *this;};
     };
 
     /** Edges can have good (1) or bad (0) orientation.
@@ -64,7 +84,7 @@ private:
     void checkSolved();
     using Rot = Cube& (Cube::*)(void);
     void randomPermute();
-    
+
 public:
     Cube();
     Cube(bool);
@@ -74,8 +94,8 @@ public:
     Cube& operator=(Cube&&) = default;
     Cube& operator=(const Cube&) = default;
     ~Cube() = default;
-    const corner  (& get_corners() const)[8] ;
-    const edge_piece (& get_edges() const)[12];
+    const corner_o  (& get_corners() const)[8] ;
+    const edge_o    (& get_edges() const)[12];
 
     bool isSolved() const;
     bool operator==(const Cube& rhs) const;
