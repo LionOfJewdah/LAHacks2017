@@ -58,158 +58,6 @@ using namespace std;
 namespace Rubik
 {
 
-///////////////////////////////////////////////////
-const int solved_cube_tmpl[] = {
-	U0, U1, U2,
-	U3, U4, U5,
-	U6, U7, U8,
-
-	L0, L1, L2,
-	L3, L4, L5,
-	L6, L7, L8,
-
-	D0, D1, D2,
-	D3, D4, D5,
-	D6, D7, D8,
-
-	F0, F1, F2,
-	F3, F4, F5,
-	F6, F7, F8,
-
-	R0, R1, R2,
-	R3, R4, R5,
-	R6, R7, R8,
-
-	B0, B1, B2,
-	B3, B4, B5,
-	B6, B7, B8
-};
-///////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////
-const string known_paths_fname = KNOWN_PATHS_FN;
-/////////////////////////////////////////////////////////////
-const string faces_sym_tbl[] = {
-							"U0", "U1", "U2",
-							"U3", "U4", "U5",
-							"U6", "U7", "U8",
-	"L0", "L1", "L2", "F0", "F1", "F2", "R0", "R1", "R2", "B0", "B1", "B2",
-	"L3", "L4", "L5", "F3", "F4", "F5", "R3", "R4", "R5", "B3", "B4", "B5",
-	"L6", "L7", "L8", "F6", "F7", "F8", "R6", "R7", "R8", "B6", "B7", "B8",
-							"D0", "D1", "D2",
-							"D3", "D4", "D5",
-							"D6", "D7", "D8"
-};
-/////////////////////////////////////////////////////////////
-const string color_sym_tbl[] = {
-						"WGP", "WP", "WPB",
-						"WG",  "W",  "WB",
-						"WRG", "WR", "WBR",
-	"GPW", "GW", "GWR",	"RGW", "RW", "RWB", "BRW", "BW", "BWP", "PBW", "PW", "PWG",
-	"GP",  "G",  "GR", 	"RG",  "R",  "RB", 	"BR",  "B",  "BP", 	"PB",  "P",  "PG",
-	"GYP", "GY", "GRY",	"RYG", "RY", "RBY", "BYR", "BY", "BPY", "PYB", "PY", "PGY",
-						"YGR", "YR", "YRB",
-						"YG",  "Y",  "YB",
-						"YPG", "YP", "YBP"
-};
-/////////////////////////////////////////////////////////////
-const unsigned char compact_faces_sym_tbl[] = {
-						'A', 'B', 'C',
-						'D', 'E', 'F',
-						'G', 'H', 'I',
-
-	'J', 'K', 'L', 		'S', 'T', 'U', 		'b', 'c', 'd', 		'k', 'l', 'm',
-	'M', 'N', 'O', 		'V', 'W', 'X', 		'e', 'f', 'g', 		'n', 'o', 'p',
-	'P', 'Q', 'R', 		'Y', 'Z', 'a', 		'h', 'i', 'j', 		'q', 'r', 's',
-
-						't', 'u', 'v',
-						'w', 'x', 'y',
-						'z', '0', '1'
-};
-/////////////////////////////////////////////////////////////
-const string move_names[] = {
-	"top    - right",
-	"top    - left",
-	"left   - up",
-	"left   - down",
-	"upper  - right",
-	"upper  - left",
-	"right  - up",
-	"right  - down",
-	"lower  - right",
-	"lower  - left",
-	"bottom - right",
-	"bottom - left"
-};
-/////////////////////////////////////////////////////////////
-const string o_move_names[] = {
-	"top    - left",
-	"top    - right",
-	"left   - down",
-	"left   - up",
-	"upper  - left",
-	"upper  - right",
-	"right  - down",
-	"right  - up",
-	"lower  - left",
-	"lower  - right",
-	"bottom - left",
-	"bottom - right"
-};
-/////////////////////////////////////////////////////////////
-const string move_names_N[] = {
-	"F",
-	"Fi",
-	"Li",
-	"L",
-	"Ui",
-	"U",
-	"R",
-	"Ri",
-	"D",
-	"Di",
-	"Bi",
-	"B",
-	"F2",
-	"F2i",
-	"L2i",
-	"L2",
-	"U2i",
-	"U2",
-	"R2",
-	"R2i",
-	"D2",
-	"D2i",
-	"B2i",
-	"B2"
-};
-/////////////////////////////////////////////////////////////
-const string o_move_names_N[] = {
-	"Fi",
-	"F",
-	"L",
-	"Li",
-	"U",
-	"Ui",
-	"Ri",
-	"R",
-	"Di",
-	"D",
-	"B",
-	"Bi",
-	"F2i",
-	"F2",
-	"L2",
-	"L2i",
-	"U2",
-	"U2i",
-	"R2i",
-	"R2",
-	"D2i",
-	"D2",
-	"B2",
-	"B2i"	
-};
 /////////////////////////////////////////////////////////////
 const string solve_methods_names[] = {
 	"0 - Tree Search (basic)",
@@ -232,48 +80,14 @@ Cube::Cube()
 }
 
 /*
- * Custom constructor.
+ * Custom constructor. use_cache will be false
  */
-Cube::Cube(int *pfaces, bool use_cache)
-{
-	m_bUpdateCache = use_cache;
-	m_nDepth = 7;
-	m_pRoot = CreateCubeFromTmpl(pfaces);
-	m_pCurrent = m_pRoot;
-	CommonInit();
-}
-
-/*
- * Custom constructor.
- */
-Cube::Cube(int depth, bool use_cache)
+Cube::Cube(int depth, bool use_cache = false)
 {
 	m_bUpdateCache = use_cache;
 	m_nDepth = depth + 1;
 	m_pRoot = m_pCurrent = NULL;
 	CommonInit();
-}
-
-/*
- * Set default console text color attribute.
- */
-void Cube::SetDefaultColorAttr()
-{
-#if defined(DOS)
-	if (false == m_bMono)
-		SetConsoleTextAttribute(m_hConsole, 10);
-#endif
-}
-
-/*
- * Set console text color attribute.
- */
-void Cube::SetColorAttr(int color_attr)
-{
-#if defined(DOS)
-	if (false == m_bMono)
-		SetConsoleTextAttribute(m_hConsole, color_attr);
-#endif
 }
 
 /*
@@ -283,35 +97,30 @@ void Cube::CommonInit()
 {
 #if defined(MYDBG15)
 	cout << "Cube::CommonInit()" << endl;
-#endif	
-	if (NULL != m_pRoot) {
+#endif
+	if (!m_pRoot) {
 		m_pMemMgm = new MemMgm(m_pRoot);
 		m_pRoot = m_pMemMgm->GetRCubeAt(0);
-		if (NULL == m_pRoot)
+		if (!m_pRoot)
 			throw Exception("Cube::CommonInit() - null pointer!");
-		m_pRoot->NullParent();			
+		m_pRoot->NullParent();
 		m_pCurrent = m_pRoot;
 	}
 	else {
 		m_pMemMgm = new MemMgm();
 	}
-		
+
 	m_fSolvedSecs = 0.0;
 	m_nSolLen = 0;
 	m_bCacheLoaded = false;
-	m_bMono = false;
 	m_bSolved = false;
-	m_pGoal = NULL;
+	m_pGoal = nullptr;
 	m_nMethod = TreeSearch;
 	m_bShow = false;
-#if defined(DOS)
-	m_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	srand(time(NULL) + GetTickCount());
-#else
+
 	srand(time(NULL));
-#endif
-	SetDefaultColorAttr();
-	UpdateCache(m_bUpdateCache);
+
+	// UpdateCache(m_bUpdateCache);
 	// Initialize cubie model (solved state).
 	for(int i=0; i<NUM_OF_CORNERS; i++) {
 		m_anCornPerm[i] = i+1;
@@ -330,20 +139,21 @@ void Cube::CommonInit()
 /*
  * Set the update known solutions cache mode.
  */
+ /*
 void Cube::UpdateCache(bool upd)
 {
 	MemMgm memMgr;
 	m_bUpdateCache = upd;
 	if(m_bUpdateCache) {
 		if (m_bShow)
-			cout << "Known paths lookup cache is enabled." << endl;		
+			cout << "Known paths lookup cache is enabled." << endl;
 		if (false == m_bCacheLoaded)
 		{
 			RCube *ptmp = NULL;
 			if (NULL != m_pRoot)
 				ptmp = memMgr.GetNewRCube(m_pRoot);
 			cout << "Generating cache, this may take several minutes..." << endl;
-			clock_t solve_time = clock();		
+			clock_t solve_time = clock();
 			if (false == LoadKnownPathsFromCache())
 			{
 				GenerateKnownPaths(NULL, 7);
@@ -351,9 +161,9 @@ void Cube::UpdateCache(bool upd)
 				cout << "Cache generated." << endl;
 			}
 			else
-				cout << "Known paths lookup loaded from cache." << endl;	
+				cout << "Known paths lookup loaded from cache." << endl;
 			double elapsed_sec = (double)(clock() - solve_time) / CLOCKS_PER_SEC;
-			cout << endl << "Finished in " << elapsed_sec << " seconds." << endl << endl;	
+			cout << endl << "Finished in " << elapsed_sec << " seconds." << endl << endl;
 			m_bCacheLoaded = true;
 			cout << "# of items in lookup: " << m_MapKnownPaths.size() << endl;
 			if (NULL != ptmp) {
@@ -367,23 +177,14 @@ void Cube::UpdateCache(bool upd)
 			cout << "Known paths lookup cache is disabled." << endl;
 	}
 }
+*/
+
 
 /*
- * Set the mode of cube presentation (color/mono).
- */
-void Cube::SetColorMode(bool colr)
-{
-	m_bMono = colr ? false : true;
-}
-
-/*
- * Default destructor.
+ * Destructor.
  */
 Cube::~Cube()
 {
-#if defined(MYDBG7)
-	cout << endl << "MYDBG7: Cube::~Cube() - destructor." << endl;
-#endif
 	if (m_bUpdateCache)
 		CacheKnownPaths();
 	m_pMemMgm->DeleteAll();
@@ -397,31 +198,28 @@ Cube::~Cube()
 RCube *Cube::SetCube(RCube *start)
 {
 	MemMgm memMgr;
-	if (NULL == start)
+	if (start == nullptr)
 		throw Exception("Cube::SetCube() - null pointer!");
     RCube *ptmp = memMgr.GetNewRCube(start);
-    if (NULL == ptmp) {
+    if (ptmp == nullptr) {
 		throw Exception("Cube::SetCube() - memory allocation failed!");
     }
 	m_pMemMgm->DeleteAll();
 	m_pRoot = m_pMemMgm->GetNewRCube(ptmp);
-	if (NULL == m_pRoot) {
+	if (!m_pRoot) {
 		delete m_pMemMgm;
 		m_pMemMgm = new MemMgm();
-		if (NULL == m_pMemMgm)
+		if (!m_pMemMgm)
 			throw Exception("Cube::SetCube() - memory depleted! (1)");
-		m_pRoot = m_pMemMgm->GetNewRCube(ptmp);		
+		m_pRoot = m_pMemMgm->GetNewRCube(ptmp);
 	}
-	if (NULL == m_pRoot)
+	if (m_pRoot == nullptr)
 		throw Exception("Cube::SetCube() - memory depleted! (2)");
-			
+
 	m_pRoot->NullParent();
 	m_pCurrent = m_pRoot;
 	m_pGoal = NULL;
-#if defined(MYDBG18)
-	cout << endl << "MYDBG18: Cube::SetCube - cube faces:" << endl;
-	Print();
-#endif
+
 	Convert2CubieModel(m_pCurrent);
 
 	return m_pRoot;
@@ -449,31 +247,31 @@ RCube *Cube::GetCurrCube()
 RCube *Cube::ResetMemMgm()
 {
 	MemMgm memMgr;
-	RCube *ptmp = NULL;
-	if (NULL != m_pRoot) {
+	RCube *ptmp = nullptr;
+	if (m_pRoot != nullptr) {
 		ptmp = memMgr.GetNewRCube(m_pRoot);
 	} else {
 		ptmp = memMgr.GetNewRCube();
 	}
-	if (NULL == ptmp) {
+	if (ptmp == nullptr) {
 		throw Exception("Cube::ResetMemMgm() - memory depleted! (1)");
 	}
-	if (NULL != m_pMemMgm) {
+	if (m_pMemMgm == nullptr) {
 		delete m_pMemMgm;
 	}
 	m_pMemMgm = new MemMgm();
-	if (NULL == m_pMemMgm) {
+	if (!m_pMemMgm) {
 		throw Exception("Cube::ResetMemMgm() - memory depleted! (2)");
 	}
 	m_pRoot = m_pMemMgm->GetNewRCube(ptmp);
-	if (NULL == m_pRoot) {
+	if (!m_pRoot) {
 		throw Exception("Cube::ResetMemMgm() - memory depleted! (3)");
 	}
 	m_pRoot->NullParent();
 	m_pCurrent = m_pRoot;
-	m_pGoal = NULL;
-	
-	return m_pRoot;	
+	m_pGoal = nullptr;
+
+	return m_pRoot;
 }
 
 /*
@@ -493,7 +291,7 @@ void Cube::SetMethod(int method)
 bool Cube::DeleteCube(RCube *p)
 {
 	bool bstat = true;
-	if (NULL != p) {
+	if (p) {
 		bstat = m_pMemMgm->DeleteRCube(p);
 	}
 	if (m_bShow && false == bstat) {
@@ -509,13 +307,13 @@ bool Cube::Solve(RCube *start)
 {
 	bool ret = false;
 
-	if (NULL == start)
+	if (start == nullptr)
 		throw Exception("Cube::Solve() - null pointer!");
 
 	m_pMemMgm->DeleteAll();
 	m_pRoot = m_pMemMgm->GetNewRCube(start);
-	if (NULL == m_pRoot)
-		throw Exception("Cube::Solve() - memory depleted!");	
+	if (!m_pRoot)
+		throw Exception("Cube::Solve() - memory depleted!");
 	m_pRoot->NullParent();
 	m_pCurrent = m_pRoot;
 	ret = SolveCube();
@@ -530,13 +328,13 @@ bool Cube::Solve(RCube *start, int depth, bool show)
 {
 	bool ret = false;
 
-	if (NULL == start)
+	if (!start)
 		throw Exception("Cube::Solve() - null pointer!");
 
 	m_pMemMgm->DeleteAll();
 	m_pRoot = m_pMemMgm->GetNewRCube(start);
-	if (NULL == m_pRoot)
-		throw Exception("Cube::Solve() - memory depleted!");	
+	if (!m_pRoot)
+		throw Exception("Cube::Solve() - memory depleted!");
 	m_pRoot->NullParent();
 	m_pCurrent = m_pRoot;
 	m_nDepth   = depth + 1;
@@ -551,11 +349,7 @@ bool Cube::Solve(RCube *start, int depth, bool show)
  */
 bool Cube::Solve()
 {
-	bool ret = false;
-
-	ret = SolveCube();
-
-	return ret;
+ 	return SolveCube();
 }
 
 /*
@@ -590,17 +384,17 @@ bool Cube::Solve(int depth, bool show)
 void Cube::ClearHistory()
 {
 	MemMgm memMgr;
-	RCube *pcurr = NULL;
-	if (NULL != m_pCurrent)
+	RCube *pcurr = nullptr;
+	if (m_pCurrent)
 		pcurr = memMgr.GetNewRCube(m_pCurrent);
 	m_pMemMgm->DeleteAll();
-	if (NULL != m_pCurrent)
+	if (m_pCurrent)
 		m_pCurrent = m_pMemMgm->GetNewRCube(pcurr);
-	if (NULL != m_pCurrent)
+	if (m_pCurrent != nullptr)
 		m_pCurrent->NullParent();
 	m_pRoot = m_pCurrent;
 	////
-	m_pSolved = NULL;
+	m_pSolved = nullptr;
 	m_bSolved = false;
 }
 
@@ -617,27 +411,26 @@ bool Cube::SolveCube(bool show)
 	m_lNodesChecked = 0L;
 	m_lVisitedNodesSkip = 0L;
 	clock_t solve_time = clock();
-	
-	if (false == IsSolvedState()) {
+
+	if (!IsSolvedState()) {
 		string known_path = SolutionInKnownPaths(m_pRoot);
-	
 		if (show)	cout << "Method: " << solve_methods_names[m_nMethod] << endl;
-	
+
 		if (0 < known_path.length()) {
 			IsSolved(m_pRoot);
 			m_bShow = false;
 			return true;
 		}
-	
+
 		switch (m_nMethod) {
 			case TreeSearch:
 				GenTree(m_pRoot, m_nDepth, show);
 				break;
-	
+
 			case TreeSearchHeur:
 				GenTree2(m_pRoot, m_nDepth, show);
 				break;
-	
+
 			case TreeSearchBackTrace:
 				m_pGoal = m_pRoot;
 				m_pRoot = m_pMemMgm->GetNewRCube(CreateSolvedCube());
@@ -647,25 +440,22 @@ bool Cube::SolveCube(bool show)
 					m_pRoot = m_pCurrent = m_pGoal;
 				}
 				break;
-	
+
 			case MultiStepHuman:
 				LayerByLayer();
 				break;
-				
+
 			case TreeSearchLookup:
 				Thistlethwaite();
 				break;
-	
+
 			default:
 				throw Exception("Cube:SolveCube - unknown method!");
-		}		
+		}
 	}
 	else {
-#if defined(MYDBG15)
-		cout << "MYDBG15: Cube::SolveCube() - nothing to solve (already in solved state)." << endl;
-#endif		
 		m_bSolved = true;
-		m_pSolved = m_pCurrent;		
+		m_pSolved = m_pCurrent;
 	}
 
 	double elapsed_sec = (double)(clock() - solve_time) / CLOCKS_PER_SEC;
@@ -676,7 +466,6 @@ bool Cube::SolveCube(bool show)
 	m_pSolved = m_pCurrent;
 	PrintSolution();
 #endif
-
 
 	cout << endl << "Finished in " << elapsed_sec << " seconds." << endl << endl;
 
@@ -726,12 +515,12 @@ bool Cube::SolveCube(bool show)
 
 /*
  * Solve the cube using IDA tree search with lookup/prune tables algorithm.
- * Algorithm is also known as Thistlethwaite's 45 (T45), designed by Finnish 
+ * Algorithm is also known as Thistlethwaite's 45 (T45), designed by Finnish
  * mathematician and named after him. He originally designed 52-step algorithm
  * which was later optimized to 45 maximum steps.
  * It divides the problem into 4 distinct phases, each solved separately
  * using more and more limited sets of moves until the entire cube is solved.
- * This algorithm should solve cube in no more than 45 steps, where double 
+ * This algorithm should solve cube in no more than 45 steps, where double
  * turn moves like U2, D2 etc. are also counted as single step).
  * Therefore if we use 90-degree turn as a definition of a singe move,
  * the number of steps will be of course greater.
@@ -739,18 +528,18 @@ bool Cube::SolveCube(bool show)
 bool Cube::Thistlethwaite()
 {
 	bool ret = true;
-	RCube *ptmp = NULL;
+	RCube *ptmp = nullptr;
 	MemMgm memMgr;
 	bool trace = false;
-	
+
 #if defined(MYDBG18)
 	trace = true;
-#endif	
-	
-	if (NULL != m_pRoot)
+#endif
+
+	if (m_pRoot)
 		ptmp = memMgr.GetNewRCube(m_pRoot);
-		
-	if (NULL == ptmp)
+
+	if (!ptmp)
 		throw Exception("Cube::Thistlethwaite() - memory allocation failed!");
 
 	CreateLookupGx();	// Create (or load from cache) prune tables.
@@ -762,11 +551,11 @@ bool Cube::Thistlethwaite()
 	}
 	if (m_bShow) cout << "Solving stage 1..." << endl;
 	int ntry = 5;
-	string help_moves = "F2R2";	
+	string help_moves = "F2R2";
 	while (0 < ntry) {
 		ret = true;
 		if (5 > ntry) cout << "Trying again, help moves: " << help_moves << endl;
-			
+
 		T45STAGE(1,IsG1Group,7,SolveThistlethwaiteG0G1,trace);
 
 		if (ret && m_bShow) cout << "Solving stage 2..." << endl;
@@ -790,9 +579,9 @@ bool Cube::Thistlethwaite()
 
 	if (ret) {
 		if (m_bShow) cout << "Solving stage 4..." << endl;
-	
+
 		T45STAGE(4,IsSolvedCubieModel,15,SolveThistlethwaiteG3G4,trace);
-	
+
 		if (false == ret) {			// if stage 4 fails
 			ret = true;
 			SetCube(ptmp);			// restore original cube
@@ -801,15 +590,15 @@ bool Cube::Thistlethwaite()
 			// attempt to solve corners (stage 4a) and then stage 4
 			T45STAGE("4a",IsCubieSolvedCorn,4,SolveThistlethwaiteG3Corners,trace);
 			if (ret && m_bShow) cout << "Solving stage 4..." << endl;
-			T45STAGE(4,IsSolvedCubieModel,15,SolveThistlethwaiteG3G4,trace);		
+			T45STAGE(4,IsSolvedCubieModel,15,SolveThistlethwaiteG3G4,trace);
 		}
 	}
 
 	if (false == IsSolved()) {
 		SetCube(ptmp);
-		ret = false;		
+		ret = false;
 	}
-	
+
 	return ret;
 }
 
@@ -821,21 +610,21 @@ bool Cube::IsG1Group()
 {
 	bool ret = true;
 	int *eo = m_anEdgeOrient;
-	
+
 	if (m_bSolved) {
 		return true;
 	}
-	
+
 	if (m_bCacheLoaded && IsSolved()) {
 		return true;
 	}
-	
+
 	for (int i=0; ret && i<NUM_OF_EDGES; i++) {
 		if (0 == eo[i]) {
 			ret = false;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -847,7 +636,7 @@ bool Cube::IsG1Group()
 		EPCopy(m_anEdgePerm, ep);			\
 		CPCopy(m_anCornPerm, cp);			\
 	}
-	
+
 #define RESTORE_CUBIE_STATUS(ep,cp,eo,co)	\
 	{										\
 		EOCopy(eo, m_anEdgeOrient);			\
@@ -885,7 +674,7 @@ bool Cube::IsG1Group()
 			}																\
 		}																	\
 		RESTORE_CUBIE_STATUS(eptmp,cptmp,eotmp,cotmp);						\
-	}	
+	}
 
 /*
  * Algorithm T45.
@@ -909,7 +698,7 @@ void Cube::SolveThistlethwaiteG0G1(RCube *start, int depth, int maxd, bool show)
 	else
 		m_lVisitedNodesSkip++;
 
-	return;	
+	return;
 }
 
 /*
@@ -921,15 +710,15 @@ bool Cube::IsG2Group()
 	bool ret = true;
 	int *ep = m_anEdgePerm;
 	int *co = m_anCornOrient;
-	
+
 	if (m_bSolved) {
 		return true;
 	}
-	
+
 	if (m_bCacheLoaded && IsSolved()) {
 		return true;
-	}	
-	
+	}
+
 	for (int i=8; ret && i<NUM_OF_EDGES; i++)
 	{
 		if (ep[i] != i+1) {
@@ -941,7 +730,7 @@ bool Cube::IsG2Group()
 			ret = false;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -972,7 +761,7 @@ void Cube::SolveThistlethwaiteG1G2(RCube *start, int depth, int maxd, bool show)
 	else
 		m_lVisitedNodesSkip++;
 
-	return;	
+	return;
 }
 
 /*
@@ -984,15 +773,15 @@ bool Cube::IsG3Group()
 	bool ret=false;
 	int *cp = m_anCornPerm;
 	int *ep = m_anEdgePerm;
-	
+
 	if (m_bSolved) {
 		return true;
 	}
-	
+
 	if (m_bCacheLoaded && IsSolved()) {
 		return true;
-	}		
-	
+	}
+
 	for (vector<CPS>::iterator it = m_vCornPermG3.begin(); false == ret && it != m_vCornPermG3.end(); ++it) {
 		ret = true;
 		for (int i=0; ret && i<NUM_OF_CORNERS; i++) {
@@ -1006,7 +795,7 @@ bool Cube::IsG3Group()
 			ret = false;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -1031,7 +820,7 @@ void Cube::SolveThistlethwaiteG2G3(RCube *start, int depth, int maxd, bool show)
 			ep[i] = 0;
 		}
 		ep[i] = ((4 < m_anEdgePerm[i] && 9 > m_anEdgePerm[i]) ? 1 : ep[i]);
-		ep[i] = ((8 < m_anEdgePerm[i]) ? 2 : ep[i]);		
+		ep[i] = ((8 < m_anEdgePerm[i]) ? 2 : ep[i]);
 	}
 	int m = m_MapIndex2mG3[LREP2Index(ep)];
 	if (m_naPruneG3[n][m] <= depth) {
@@ -1041,7 +830,7 @@ void Cube::SolveThistlethwaiteG2G3(RCube *start, int depth, int maxd, bool show)
 	else
 		m_lVisitedNodesSkip++;
 
-	return;	
+	return;
 }
 
 /*
@@ -1057,15 +846,15 @@ bool Cube::IsCubieSolvedCorn()
 		ret = IsSolved();
 	}
 	if (false == ret) {
-		ret = SolvedCornersCubieModel(m_anCornPerm, m_anCornOrient);		
+		ret = SolvedCornersCubieModel(m_anCornPerm, m_anCornOrient);
 	}
-	
+
 	return ret;
 }
 
 /*
  * Algorithm T45.
- * After G3 stage is reached, solve the corners (no more than 4 moves) 
+ * After G3 stage is reached, solve the corners (no more than 4 moves)
  * before proceeding to stage 4 IDA search.
  */
 void Cube::SolveThistlethwaiteG3Corners(RCube *start, int depth, int maxd, bool show)
@@ -1081,7 +870,7 @@ void Cube::SolveThistlethwaiteG3Corners(RCube *start, int depth, int maxd, bool 
 	int moves[] = {MOVE_L2, MOVE_R2, MOVE_F2, MOVE_B2, MOVE_U2, MOVE_D2};
 	T45LOOP(SolveThistlethwaiteG3Corners,IsCubieSolvedCorn,false);
 
-	return;	
+	return;
 }
 
 /*
@@ -1115,7 +904,7 @@ void Cube::SolveThistlethwaiteG3G4(RCube *start, int depth, int maxd, bool show)
 	else
 		m_lVisitedNodesSkip++;
 
-	return;		
+	return;
 }
 
 /*
@@ -1151,7 +940,7 @@ void Cube::CreateLookupGx()
 	if (false == m_bPruneG4Gen) {
 		cout << "Initializing prune table P4..." << endl;
 		if (false == LoadLookupG4()) {
-			GenLookupG4();			
+			GenLookupG4();
 			SaveLookupG4();
 		}
 		m_bPruneG4Gen = true;
@@ -1193,7 +982,7 @@ void Cube::CreateLookupGx()
 map<int,int> Cube::LoadLookupMap(string fn)
 {
 	map<int,int> ret;
-	
+
 	ifstream cache;
 	cache.open(fn.c_str());
 	if(cache.is_open()) {
@@ -1204,8 +993,8 @@ map<int,int> Cube::LoadLookupMap(string fn)
 		}
 		cout << "Loaded " << i << " entries to lookup table." << endl;
 		cache.close();
-	}	
-	
+	}
+
 	return ret;
 }
 
@@ -1219,7 +1008,7 @@ bool Cube::LoadLookupG1()
 	string fn = PRUNE_G1_FN;
 	string buf;
 	ifstream cache;
-	
+
 	cache.open(fn.c_str());
 	if (cache.is_open()) {
 		int i=0;
@@ -1230,11 +1019,11 @@ bool Cube::LoadLookupG1()
 		cache.close();
 		ret = true;
 	}
-	
+
 	if (m_bShow) {
 		cout << "Cube::LoadLookupG1 - " << ((ret) ? "OK" : "ERR") << endl;
 	}
-	
+
 	return ret;
 }
 
@@ -1255,10 +1044,10 @@ bool Cube::SaveLookupG1()
 		cache.close();
 		ret = true;
 	} else {
-		cout << endl << "ERROR: Cube::SaveLookupG1() - unable to save cache of prune table!" << endl;	
+		cout << endl << "ERROR: Cube::SaveLookupG1() - unable to save cache of prune table!" << endl;
 	}
-	
-	return ret;	
+
+	return ret;
 }
 
 /*
@@ -1271,9 +1060,9 @@ bool Cube::LoadLookupG2()
 	string fn = PRUNE_G2_FN;
 	string buf;
 	ifstream cache;
-	
+
 	LOAD_PRUNE_TABLE(m_naPruneG2,fn,PRUNE_G2_SIZE_N,PRUNE_G2_SIZE_M,ret);
-	
+
 	if (ret) {
 		fn = LOOKUP_G2_N_FN;
 		m_MapIndex2nG2 = LoadLookupMap(fn);
@@ -1281,7 +1070,7 @@ bool Cube::LoadLookupG2()
 			ret = false;
 		}
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G2_M_FN;
 		m_MapIndex2mG2 = LoadLookupMap(fn);
@@ -1293,7 +1082,7 @@ bool Cube::LoadLookupG2()
 	if (m_bShow) {
 		cout << "Cube::LoadLookupG2 - " << ((ret) ? "OK" : "ERR") << endl;
 	}
-	
+
 	return ret;
 }
 
@@ -1301,24 +1090,24 @@ bool Cube::LoadLookupG2()
  * Algorithm T45.
  * Generic method to save map in disk file.
  */
-template<typename T> 
+template<typename T>
 bool Cube::SaveLookupMap(string fn, T map2save)
 {
 	ofstream cache;
 	bool ret = false;
-	
+
 	cache.open(fn.c_str());
 	if(cache.is_open()) {
 		for (typename T::iterator it = map2save.begin(); it != map2save.end(); ++it) {
-			cache << it->first << endl; 
+			cache << it->first << endl;
 			cache << it->second << endl;
 		}
 		cache.close();
 		ret = true;
 	} else {
-		cout << endl << "ERROR: Cube::SaveLookupMap() - unable to save cache of lookup! File: [" << fn << "]." << endl;	
+		cout << endl << "ERROR: Cube::SaveLookupMap() - unable to save cache of lookup! File: [" << fn << "]." << endl;
 	}
-	
+
 	return ret;
 }
 
@@ -1341,20 +1130,20 @@ bool Cube::SaveLookupG2()
 		cache.close();
 		ret = true;
 	} else {
-		cout << endl << "ERROR: Cube::SaveLookupG2() - unable to save cache of prune table!" << endl;	
+		cout << endl << "ERROR: Cube::SaveLookupG2() - unable to save cache of prune table!" << endl;
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G2_N_FN;
 		ret = SaveLookupMap(fn, m_MapIndex2nG2);
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G2_M_FN;
 		ret = SaveLookupMap(fn, m_MapIndex2mG2);
-	}	
-	
-	return ret;	
+	}
+
+	return ret;
 }
 
 /*
@@ -1367,17 +1156,17 @@ bool Cube::LoadLookupG3()
 	string fn = PRUNE_G3_FN;
 	string buf;
 	ifstream cache;
-	
+
 	LOAD_PRUNE_TABLE(m_naPruneG3,fn,PRUNE_G3_SIZE_N,PRUNE_G3_SIZE_M,ret);
-	
+
 	if (ret) {
 		fn = LOOKUP_G3_M_FN;
 		m_MapIndex2mG3 = LoadLookupMap(fn);
 		if (m_MapIndex2mG3.empty()) {
 			ret = false;
 		}
-	}	
-	
+	}
+
 	if (ret) {
 		ifstream cache;
 		ret = false;
@@ -1398,12 +1187,12 @@ bool Cube::LoadLookupG3()
 			cache.close();
 			ret = true;
 		}
-	}	
-	
+	}
+
 	if (m_bShow) {
 		cout << "Cube::LoadLookupG3 - " << ((ret) ? "OK" : "ERR") << endl;
 	}
-	
+
 	return ret;
 }
 
@@ -1426,14 +1215,14 @@ bool Cube::SaveLookupG3()
 		cache.close();
 		ret = true;
 	} else {
-		cout << endl << "ERROR: Cube::SaveLookupG3() - unable to save cache of prune table!" << endl;	
+		cout << endl << "ERROR: Cube::SaveLookupG3() - unable to save cache of prune table!" << endl;
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G3_M_FN;
 		ret = SaveLookupMap(fn, m_MapIndex2mG3);
 	}
-	
+
 	if (ret) {
 		ret = false;
 		fn = CORNPERM_G3_FN;
@@ -1449,11 +1238,11 @@ bool Cube::SaveLookupG3()
 			cache.close();
 			ret = true;
 		} else {
-			cout << endl << "ERROR: Cube::SaveLookupG3() - unable to save cache of lookup!" << endl;	
+			cout << endl << "ERROR: Cube::SaveLookupG3() - unable to save cache of lookup!" << endl;
 		}
-	}	
-	
-	return ret;	
+	}
+
+	return ret;
 }
 
 /*
@@ -1466,9 +1255,9 @@ bool Cube::LoadLookupG4()
 	string fn = PRUNE_G4_FN;
 	string buf;
 	ifstream cache;
-	
+
 	LOAD_PRUNE_TABLE(m_naPruneG4,fn,PRUNE_G4_SIZE_N,PRUNE_G4_SIZE_M,ret);
-	
+
 	if (ret) {
 		fn = LOOKUP_G4_N_FN;
 		m_MapIndex2nG4 = LoadLookupMap(fn);
@@ -1476,19 +1265,19 @@ bool Cube::LoadLookupG4()
 			ret = false;
 		}
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G4_M_FN;
 		m_MapIndex2mG4 = LoadLookupMap(fn);
 		if (m_MapIndex2mG4.empty()) {
 			ret = false;
 		}
-	}	
+	}
 
 	if (m_bShow) {
 		cout << "Cube::LoadLookupG4 - " << ((ret) ? "OK" : "ERR") << endl;
 	}
-	
+
 	return ret;
 }
 
@@ -1511,20 +1300,20 @@ bool Cube::SaveLookupG4()
 		cache.close();
 		ret = true;
 	} else {
-		cout << endl << "ERROR: Cube::SaveLookupG4() - unable to save cache of prune table!" << endl;	
+		cout << endl << "ERROR: Cube::SaveLookupG4() - unable to save cache of prune table!" << endl;
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G4_N_FN;
 		ret = SaveLookupMap(fn, m_MapIndex2nG4);
 	}
-	
+
 	if (ret) {
 		fn = LOOKUP_G4_M_FN;
 		ret = SaveLookupMap(fn, m_MapIndex2mG4);
-	}	
-	
-	return ret;	
+	}
+
+	return ret;
 }
 
 /*
@@ -1533,7 +1322,7 @@ bool Cube::SaveLookupG4()
 bool Cube::LoadCache(string fn, MapKnownPaths &m)
 {
 	bool ret = false;
-	
+
 	ifstream cached_map;
 	string key, buf;
 	int mode=0;
@@ -1558,9 +1347,9 @@ bool Cube::LoadCache(string fn, MapKnownPaths &m)
 		}
 		cached_map.close();
 		ret = true;
-	}	
-	
-	return ret;	
+	}
+
+	return ret;
 }
 
 /*
@@ -1636,17 +1425,17 @@ void Cube::GenLookupG2()
 	}
 	int nx=0, ny=0;
 	int n = CO2Index(co);		// corners orientation state to index
-	int m = EO2Index(ep);		// edge permutation (pieces 9-12 location) state to index (11-bits: 0-2047)	
+	int m = EO2Index(ep);		// edge permutation (pieces 9-12 location) state to index (11-bits: 0-2047)
 	COS co2st;
-	EPS ep2st;	
+	EPS ep2st;
 	COCopy(co, co2st.co);
 	EPCopy(ep, ep2st.ep);
 	map<int,COS> MapCornIdx2St;
 	map<int,EPS> MapEdgeIdx2St;
 	MapCornIdx2St[nx] = co2st;
 	MapEdgeIdx2St[ny] = ep2st;
-	m_MapIndex2nG2[n] = nx;		// create a lookup index (0-PRUNE_G2_SIZE_N) to the real index		
-	m_MapIndex2mG2[m] = ny;		// create a lookup index (0-PRUNE_G2_SIZE_M) to the real index	
+	m_MapIndex2nG2[n] = nx;		// create a lookup index (0-PRUNE_G2_SIZE_N) to the real index
+	m_MapIndex2mG2[m] = ny;		// create a lookup index (0-PRUNE_G2_SIZE_M) to the real index
 	n = nx++;					// lookup index used to prune table 'n' column
 	m = ny++;					// lookup index used to prune table 'm' column
 	int d = 0;
@@ -1689,13 +1478,13 @@ void Cube::GenLookupG2()
 					COCopy(co, co2st.co);
 					MapCornIdx2St[nx] = co2st;
 				}
-				n = ((keyfound.second) ? nx++ : keyfound.first->second);				
+				n = ((keyfound.second) ? nx++ : keyfound.first->second);
 				// find a lookup index to the 'm' column of prune table
 				keyfound = m_MapIndex2mG2.insert(pair<int,int>(m,ny));
 				if (keyfound.second) {
 					EPCopy(ep, ep2st.ep);
 					MapEdgeIdx2St[ny] = ep2st;
-				}				
+				}
 				m = ((keyfound.second) ? ny++ : keyfound.first->second);
 #if defined(MYDBG21)
 				cout << "MYDBG21: Cube::GenLookupG2 - {n, m}={" << n << ", " << m << "}" << endl;
@@ -1711,7 +1500,7 @@ void Cube::GenLookupG2()
 					empty_slots--;
 				}
 				COCopy(MapCornIdx2St[x].co, co);
-				EPCopy(MapEdgeIdx2St[y].ep, ep);				
+				EPCopy(MapEdgeIdx2St[y].ep, ep);
 			}
 		}
 		if (m_bShow)
@@ -1755,7 +1544,7 @@ void Cube::GenInitStatesG3(int *ep, int *cp, int &empty_slots, int &index)
 					v_indicesxy.push_back(ind);
 				}
 			}
-		}	
+		}
 		for (vector<indice>::iterator it = v_indicesxy.begin(); it != v_indicesxy.end(); ++it) {
 			int x=(*it).x, y=(*it).y, mm=-1;
 			//m = -1; // 'y' is a lookup index to colum 'm' of the prune table
@@ -1803,17 +1592,17 @@ void Cube::GenInitStatesG3(int *ep, int *cp, int &empty_slots, int &index)
 				}
 				CPCopy(Index2CP(x), cp);	// restore corners permutations status from index x
 				EPCopy(Index2LREP(mm), ep);
-			}			
+			}
 		}
 		if (m_bShow)
 			cout << "Cube::GenInitStatesG3 - distance: " << d-1 << ", items: " << v_indicesxy.size() << endl;
-	}	
+	}
 	for (unsigned int i=0; i<PRUNE_G3_SIZE_N; i++) {
 		for (unsigned int j=0; j<PRUNE_G3_SIZE_M; j++) {
 			if (-1 != m_naPruneG3[i][j])
 				m_naPruneG3[i][j] = 0;
 		}
-	}	
+	}
 }
 
 /*
@@ -1836,7 +1625,7 @@ void Cube::GenLookupG3()
 #if defined(MYDBG18)
 	cout << "MYDBG18: Cube::GenLookupG3 - {n, m}={" << n << ", " << m << "}" << endl;
 	cout << "MYDBG18: Cube::GenLookupG3 - generating prune table..." << endl;
-#endif	
+#endif
 	while (0 < empty_slots) {
 		d++;
 		if (m_bShow)
@@ -1921,7 +1710,7 @@ void Cube::GenLookupG4()
 #if defined(MYDBG18)
 	cout << "MYDBG18: Cube::GenLookupG4 - {n, m}={" << n << ", " << m << "}" << endl;
 	cout << "MYDBG18: Cube::GenLookupG4 - generating prune table..." << endl;
-#endif	
+#endif
 	m_naPruneG4[n][m] = d;
 	empty_slots--;
 	while (0 < empty_slots) {
@@ -1948,7 +1737,7 @@ void Cube::GenLookupG4()
 					nn = it->first;
 					break;
 				}
-			}			
+			}
 			for (map<int,int>::iterator it = m_MapIndex2mG4.begin(); it != m_MapIndex2mG4.end(); ++it) {
 				if (it->second == y) {
 					mm = it->first;
@@ -1956,12 +1745,12 @@ void Cube::GenLookupG4()
 				}
 			}
 			if (0 > nn)	// this should never happen
-				throw Exception("Cube::GenLookupG4 - real index N not found in map. Algorithm failure!");			
+				throw Exception("Cube::GenLookupG4 - real index N not found in map. Algorithm failure!");
 			if (0 > mm)	// this should never happen
 				throw Exception("Cube::GenLookupG4 - real index M not found in map. Algorithm failure!");
 			CPCopy(Index2CP(nn), cp);	// restore corners permutation status from index x
 			EPCopy(Index2EP(mm), ep);	// restore edges permutation status from index y
-			int moves[] = {MOVE_L2, MOVE_R2, MOVE_F2, MOVE_B2, MOVE_U2, MOVE_D2};			
+			int moves[] = {MOVE_L2, MOVE_R2, MOVE_F2, MOVE_B2, MOVE_U2, MOVE_D2};
 			for (unsigned int j = 0; j < sizeof(moves)/sizeof(moves[0]); j++) {
 				CPApplyMove(moves[j], cp);
 				EPApplyMove(moves[j], ep);
@@ -1987,7 +1776,7 @@ void Cube::GenLookupG4()
 					empty_slots--;
 				}
 				CPCopy(Index2CP(nn), cp);	// restore corners permutation status from index x
-				EPCopy(Index2EP(mm), ep);	// restore edges permutation status from index y				
+				EPCopy(Index2EP(mm), ep);	// restore edges permutation status from index y
 			}
 		}
 		if (m_bShow)
@@ -2003,15 +1792,15 @@ int Cube::EdgesOrientStates2Index(RCube *p)
 {
 	int ret = 0;
 	int *pedges = NULL;
-	
+
 	pedges = ConvertCubeEdges2OrientTbl(p);
 
 	ret = EO2Index(pedges);
 
 #if defined(MYDBG19)
 	cout << "MYDBG19: Cube::EdgesOrientStates2Index - index=" << ret << endl;
-#endif	
-	
+#endif
+
 	return ret;
 }
 
@@ -2031,7 +1820,7 @@ bool Cube::LayerByLayer()
 		ret = SolveMiddleLayer(m_pCurrent);
 
 	if (m_bSolved)	return true;
-	
+
 	if (ret)
 		ret = L3EdgeOrientation(m_pCurrent);
 
@@ -2508,9 +2297,9 @@ bool Cube::Insert1stLayerCorners(RCube *p)
 		p = DoMove(p, MOVE_U);
 
 	ret = IsTopLayerSolvedStep1(p) || IS_CUBE_SOLVED(p);
-	
+
 	if (IS_CUBE_SOLVED(p))
-		p = m_pCurrent;	
+		p = m_pCurrent;
 
 	m_pCurrent = p;
 
@@ -2547,7 +2336,7 @@ bool Cube::Position1stLayerCorners(RCube *p)
 	ret = IsTopLayerSolvedStep2(p) || IS_CUBE_SOLVED(p);
 	if (IS_CUBE_SOLVED(p))
 		p = m_pCurrent;
-			
+
 	m_pCurrent = p;
 
 	return ret;
@@ -2585,12 +2374,12 @@ bool Cube::Orient1stLayerCorners(RCube *p)
 				p = DoMove(p, MOVE_U);
 		}
 	}
-	
+
 	ret = IsTopLayerSolved(p) || IS_CUBE_SOLVED(p);
-	
+
 	if (IS_CUBE_SOLVED(p))
 		p = m_pCurrent;
-		
+
 	m_pCurrent = p;
 
 	return ret;
@@ -2605,7 +2394,7 @@ bool Cube::Solve1stLayerCorners(RCube *p)
 {
 	bool ret = false;
 	int n = 8;
-	
+
 	if (m_bShow)
 		cout << "Solving L1 corners..." << endl;
 
@@ -2616,7 +2405,7 @@ bool Cube::Solve1stLayerCorners(RCube *p)
 
 	n = 4;
 	while(false == (ret = Orient1stLayerCorners(m_pCurrent)) && 0 < n--) {}
-	
+
 	if (m_bShow)
 		cout << "L1 corners " << ((ret) ? "solved" : "unsolved") << "." << endl;
 
@@ -2666,7 +2455,7 @@ bool Cube::SolveMiddleLayer(RCube *p)
 {
 	if (m_bShow)
 		cout << "Solving L2..." << endl;
-		
+
 	if (IsMiddleLayerSolved(p) || IS_CUBE_SOLVED(p)) return true;
 
 	bool ret = false;
@@ -2704,12 +2493,12 @@ bool Cube::SolveMiddleLayer(RCube *p)
 		}
 
 	}
-	
+
 	if (IS_CUBE_SOLVED(p))
 		p = m_pCurrent;
 
 	m_pCurrent = p;
-	
+
 	if (m_bShow)
 		cout << "L2 " << ((ret) ? "solved" : "unsolved") << "." << endl;
 
@@ -2755,7 +2544,7 @@ bool Cube::PositionBottomLayerCorners(RCube *p)
 {
 	bool ret = false;
 	int n=8;
-	
+
 	if (m_bShow)
 		cout << "Solving L3 corners position..." << endl;
 
@@ -2777,12 +2566,12 @@ bool Cube::PositionBottomLayerCorners(RCube *p)
 			p = DoMoves(p, "RDiLiDRiDiLD2");
 		}
 	}
-	
+
 	if (IS_CUBE_SOLVED(p))
 		p = m_pCurrent;
 
 	m_pCurrent = p;
-	
+
 	if (m_bShow)
 		cout << "L3 corners position " << ((ret) ? "solved" : "unsolved") << "." << endl;
 
@@ -2928,10 +2717,10 @@ bool Cube::OrientBottomLayerCorners(RCube *p)
    string corners_orient;
    string a10 = "LiDiLDiLiD2LD2";
    string a11 = "LDLiDLD2LiD2";
-   
+
 	if (m_bShow)
 		cout << "Solving L3 corners orientation..." << endl;
-   
+
    while (false == (ret = L3CornersOriented(p)) && 0 < n--)
    {
   		corners_orient = L3CheckCornersOrient(p);
@@ -3007,7 +2796,7 @@ bool Cube::OrientBottomLayerCorners(RCube *p)
 				p = DoMove(p, MOVE_Di);
 				if (IsSolved(p)) return true;
 				p = DoMoves(p, a10);
-				if (IsSolved(p)) return true;	
+				if (IsSolved(p)) return true;
 		}
   		else if (corners_orient.compare("2112") == 0)
   		{
@@ -3017,8 +2806,8 @@ bool Cube::OrientBottomLayerCorners(RCube *p)
 				if (IsSolved(p)) return true;
 				p = DoMoves(p, "D2");
 				if (IsSolved(p)) return true;
-				p = DoMoves(p, a11);  			
-				if (IsSolved(p)) return true;	
+				p = DoMoves(p, a11);
+				if (IsSolved(p)) return true;
 		}
 		// Return bottom (L3, D) layer to proper position.
 		while (4 > m++)
@@ -3027,13 +2816,13 @@ bool Cube::OrientBottomLayerCorners(RCube *p)
 			if (IsSolved(p)) return true;
 		}
 	 }
-	 
+
 	 m_pCurrent = p;
-	 
+
 	 if (m_bShow)
 	 	cout << "L3 corners orientation " << ((ret) ? "solved" : "unsolved") << "." << endl;
-	 	
-   return ret;   
+
+   return ret;
 }
 
 /*
@@ -3156,7 +2945,7 @@ bool Cube::L3EdgeOrientation(RCube *p)
 {
 	if (m_bShow)
 		cout << "Solving L3 edges orientation..." << endl;
-		
+
 	if (IsBottomCrossSolvedNotPositioned(p) || IS_CUBE_SOLVED(p)) return true;
 
 	bool ret = false;
@@ -3213,12 +3002,12 @@ bool Cube::L3EdgeOrientation(RCube *p)
 		}
 		ret = IsBottomCrossSolvedNotPositioned(p) || IS_CUBE_SOLVED(p);
 	}
-	
+
 	if (m_bSolved)
 		p = m_pCurrent;
 
 	m_pCurrent = p;
-	
+
 	if (m_bShow)
 		cout << "L3 edges orientation " << ((ret) ? "solved" : "unsolved") << "." << endl;
 
@@ -3265,7 +3054,7 @@ bool Cube::L3EdgePermutation(RCube *p)
 	bool edges_pos[] = {false, false, false, false};
 	int  edges_cub[4];
 	int n = 8;
-	
+
 	if (m_bShow)
 		cout << "Solving L3 edges permutation..." << endl;
 
@@ -3296,7 +3085,7 @@ bool Cube::L3EdgePermutation(RCube *p)
 		if (false == IS_CUBE_SOLVED(p)) {
 			switch (m) {
 				case 0:
-					p = DoMoves(p, a12);					
+					p = DoMoves(p, a12);
 					break;
 				case 1:
 					if (edges_cub[3] == D5)
@@ -3335,14 +3124,14 @@ bool Cube::L3EdgePermutation(RCube *p)
 				default:
 					break;
 			}
-		} 
+		}
 	}
-	
+
 	if (IS_CUBE_SOLVED(p))
 		p = m_pCurrent;
 
 	m_pCurrent = p;
-	
+
 	if (m_bShow)
 		cout << "L3 edges permutation " << ((ret) ? "solved" : "unsolved") << "." << endl;
 
@@ -3422,7 +3211,7 @@ void Cube::PrintPath(RCube *p)
 		cout << "Solution has " << num_moves << " moves: " << sol_path << endl << endl;
 		PrintSolPathEyeFriendly(sol_path);
 	}
-	
+
 	m_nSolLen = num_moves;
 }
 
@@ -3436,7 +3225,7 @@ void Cube::PrintSolPathEyeFriendly(string sol_path)
 	string move;
 	string spc1 = " ";
 	string spc2	= "  ";
-	
+
 	cout << m << ")\t";
 	for (unsigned int i=0; i < sol_path.length(); i++) {
 		char c = sol_path[i];
@@ -3456,7 +3245,7 @@ void Cube::PrintSolPathEyeFriendly(string sol_path)
 		}
 		if (20 == n) {
 			n = 0; m++;
-			cout << endl << m << ")\t";			
+			cout << endl << m << ")\t";
 		}
 	}
 	if (0 < move.length())
@@ -3511,7 +3300,7 @@ RCube *Cube::Scramble(int moves, bool show)
 		if (show) cout << "Move #" << (i+1) << ") " << move_names_N[move] << ":" << endl;
 		p = ret;
 		int eotmp[NUM_OF_EDGES], cotmp[NUM_OF_CORNERS], eptmp[NUM_OF_EDGES], cptmp[NUM_OF_CORNERS];
-		SAVE_CUBIE_STATUS(eptmp,cptmp,eotmp,cotmp);		
+		SAVE_CUBIE_STATUS(eptmp,cptmp,eotmp,cotmp);
 		ret = DoMove(p, move);
 		cube_str = ConvertCube2String(ret);
 		while (0 < states_map.count(cube_str)) {
@@ -3681,7 +3470,7 @@ RCube *Cube::CreateCubeFromStrVectDef(vector<string> cube_def, bool clrmem)
 	RCube *ret = m_pMemMgm->GetNewRCube(); //new RCube();
 	if (NULL == ret)
 		throw Exception("Cube::CreateCubeFromStrVectDef() - memory depleted!");
-		
+
 	int x=0, y=0;
 
 	for (int i=0; i<6*9; i++) {
@@ -3731,7 +3520,7 @@ RCube *Cube::CreateCubeFromStrVectDef(vector<string> cube_def, bool clrmem)
  *        U,L,F,etc. - indicate the faces of the cube as visible
  *                     from the front (F) side of the cube.
  *        U-upper, L-left, F-front, R-right, B-bottom (opposite to F),
- *        D-down (or 'lower', opposite to U). 
+ *        D-down (or 'lower', opposite to U).
  * The color codes and their face designations in a solved cube:
  *    U - upper face  -  (W) white
  *    F - front face  -  (R) red
@@ -3756,37 +3545,37 @@ RCube *Cube::CreateCubeFromColorStrVectDef(vector<string> cube_def)
 		{8,		15,		14},
 		{9,		20,		0},
 		{10,	3,		-1},
-		{11,	6,		12},		
+		{11,	6,		12},
 		{21,	32,		-1},
 		{22,	-1,		-1},
-		{23,	24,		-1},		
+		{23,	24,		-1},
 		{33,	51,		44},
 		{34,	48,		-1},
-		{35,	36,		45},		
+		{35,	36,		45},
 		{12,	11,		6},
 		{13,	7,		-1},
-		{14,	8,		15},		
+		{14,	8,		15},
 		{24,	23,		-1},
 		{25,	-1,		-1},
-		{26,	27,		-1},				
+		{26,	27,		-1},
 		{36,	45,		35},
 		{37,	46,		-1},
-		{38,	39,		47},		
+		{38,	39,		47},
 		{15,	14,		8},
 		{16,	5,		-1},
-		{17,	2, 		18},		
+		{17,	2, 		18},
 		{27,	26,		-1},
 		{28,	-1,		-1},
-		{29,	30,		-1},				
+		{29,	30,		-1},
 		{39,	47,		38},
 		{40,	50,		-1},
-		{41,	42,		53},						
+		{41,	42,		53},
 		{18,	17,		2},
 		{19,	1,		-1},
-		{20,	0, 		9},		
+		{20,	0, 		9},
 		{30,	29,		-1},
 		{31,	-1,		-1},
-		{32,	21,		-1},		
+		{32,	21,		-1},
 		{42,	53,		41},
 		{43,	52,		-1},
 		{44,	33,		51},
@@ -3817,10 +3606,10 @@ RCube *Cube::CreateCubeFromColorStrVectDef(vector<string> cube_def)
 			}
 		}
 	}
-	
+
 	if (conv_cube_def.size() != 6*9)
 		throw Exception("Cube::CreateCubeFromColorStrVectDef - invalid cube colors definition");
-		
+
 	ret = CreateCubeFromStrVectDef(conv_cube_def);
 
 	return ret;
@@ -3834,11 +3623,11 @@ RCube *Cube::CreateSolvedCube()
 {
 	MemMgm memMgr;
 	RCube *ret = memMgr.GetNewRCube();
-	
+
 	ret = m_pMemMgm->GetNewRCube(SetSolvedCube(ret));
 	if (NULL == ret)
 		throw Exception("Cube::CreateSolvedCube() - memory depleted!");
-		
+
 	// Initialize cubie model (solved state).
 	for(int i=0; i<NUM_OF_CORNERS; i++) {
 		m_anCornPerm[i] = i+1;
@@ -3847,7 +3636,7 @@ RCube *Cube::CreateSolvedCube()
 	for(int i=0; i<NUM_OF_EDGES; i++) {
 		m_anEdgePerm[i] = i+1;
 		m_anEdgeOrient[i] = 1;
-	}	
+	}
 
 	return ret;
 }
@@ -3860,7 +3649,7 @@ RCube *Cube::CreateSolvedCube()
 RCube *Cube::SetSolvedCube(RCube *p)
 {
 	RCube *ret = p;
-	
+
 	if (NULL == ret)
 		throw Exception("Cube::SetSolvedCube - NULL pointer!");
 
@@ -3909,7 +3698,7 @@ RCube *Cube::SetSolvedCube(RCube *p)
 				break;
 		}
 	}
-	
+
 	// Initialize cubie model (solved state).
 	for(int i=0; i<NUM_OF_CORNERS; i++) {
 		m_anCornPerm[i] = i+1;
@@ -3918,7 +3707,7 @@ RCube *Cube::SetSolvedCube(RCube *p)
 	for(int i=0; i<NUM_OF_EDGES; i++) {
 		m_anEdgePerm[i] = i+1;
 		m_anEdgeOrient[i] = 1;
-	}	
+	}
 
 	return ret;
 }
@@ -4354,7 +4143,7 @@ bool Cube::IsSolved()
  * Clean cube and solution from memory.
  * Remember to make a copy of your cube if you need to keep it before calling this method.
  */
-int Cube::ClearPath(RCube *p)			
+int Cube::ClearPath(RCube *p)
 {
 	int n = 0;
 
@@ -4362,7 +4151,7 @@ int Cube::ClearPath(RCube *p)
 		m_pMemMgm->DeleteAll();
 		n++;
 	}
-	
+
 	return n;
 }
 
@@ -4374,7 +4163,7 @@ int Cube::ClearPath(RCube *p)
 bool Cube::IsSolved(RCube *p)
 {
 	bool ret = true;
-	
+
 	if (NULL == p)
 		throw Exception("Cube::IsSolved() - null pointer!");
 
@@ -4410,7 +4199,7 @@ bool Cube::IsSolved(RCube *p)
 			} while (sol_len > full_path.length());
 			RCube *pTmpCube = new RCube(*m_pRoot);
 			if (NULL == pTmpCube)
-				throw Exception("Cube::IsSolved() - memory depleted!");			
+				throw Exception("Cube::IsSolved() - memory depleted!");
 			ClearPath(p);
 			m_pRoot = m_pMemMgm->GetNewRCube(pTmpCube);
 			m_pRoot->NullParent();
@@ -4431,7 +4220,7 @@ bool Cube::IsSolved(RCube *p)
  */
 bool Cube::IsSolvedState()
 {
-	return IsSolvedState(m_pCurrent);	
+	return IsSolvedState(m_pCurrent);
 }
 
 /*
@@ -4442,7 +4231,7 @@ bool Cube::IsSolvedState(RCube *p)
 {
 	bool ret = true;
 	int i=0;
-	
+
 	if (NULL == p) return false;
 
 	while (i<6*9 && ret) {
@@ -4506,7 +4295,7 @@ bool Cube::IsSolvedState(RCube *p)
 				break;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -4518,13 +4307,13 @@ bool Cube::IsSolvedState(RCube *p)
 bool Cube::IsSolvedCubieModel()
 {
 	bool ret = false;
-	
+
 	ret = CubieModelSolved(m_anEdgePerm, m_anCornPerm, m_anEdgeOrient, m_anCornOrient);
 	if (ret) {
 		m_bSolved = true;
-		m_pSolved = m_pCurrent;		
+		m_pSolved = m_pCurrent;
 	}
-	
+
 	return ret;
 }
 
@@ -4538,11 +4327,11 @@ string Cube::OptimizeSolutionPath(string sol_path)
    string ret, cache;
    char prev = ' ', prev2 = ' ';
    int count = 0;
-   
+
 #if defined(MYDBG18)
    cout << "MYDBG18: Cube::OptimizeSolutionPath() - START" << endl;
    cout << "MYDBG18: Before: " << sol_path << endl;
-#endif   
+#endif
 
    sol_path += ' ';   // add space at the end for proper algorithm function at the end of the string
    for (string::iterator it = sol_path.begin(); it != sol_path.end(); ++it) {
@@ -4595,7 +4384,7 @@ string Cube::OptimizeSolutionPath(string sol_path)
          continue;
       } else if (prev2 != ' '
                  && toupper(prev2) == toupper(c)
-                 && ((isupper(prev2) && islower(c)) 
+                 && ((isupper(prev2) && islower(c))
                       || (islower(prev2) && isupper(c)))
                 ) // detect moves on opposite layers that cancel each other
       {
@@ -4607,7 +4396,7 @@ string Cube::OptimizeSolutionPath(string sol_path)
                  ) ||
                  (layer_pairs[i] == toupper(prev)
                   && layer_pairs[i+1] == toupper(c)
-                 )) 
+                 ))
                )
             {
                bopt = true;
@@ -4653,13 +4442,13 @@ string Cube::OptimizeSolutionPath(string sol_path)
    // remove the extra space from the end - we don't need it anymore
    if (' ' == ret[ret.length()-1]) {
 	  string::iterator ret_tail = ret.end() - 1;
-   	  ret.erase(ret_tail);   	
+   	  ret.erase(ret_tail);
    }
-   
+
 #if defined(MYDBG18)
    cout << "MYDBG18: After : " << ret << endl;
-   cout << "MYDBG18: Cube::OptimizeSolutionPath() - END" << endl;   
-#endif      
+   cout << "MYDBG18: Cube::OptimizeSolutionPath() - END" << endl;
+#endif
 
    return ret;
 }
@@ -4672,13 +4461,13 @@ string Cube::OptimizeSolutionPath(string sol_path)
 RCube *Cube::GetNewRCube4Move(RCube *p, int move)
 {
 	RCube *ret = m_pMemMgm->GetNewRCube(p);
-	
+
 	if (NULL == ret) {
 		throw Exception ("Cube::GetNewRCube4Move() - memory depleted!");
 	}
-	
+
 	ret->parent_move = move;
-	
+
 	return ret;
 }
 
@@ -4740,7 +4529,7 @@ RCube *Cube::DoMove(RCube *start, int move)
 	}
 	// cubie model
 	ApplyMove(move, m_anEdgePerm, m_anCornPerm, m_anEdgeOrient, m_anCornOrient);
-	
+
 	m_pCurrent = cube;
 
 	return cube;
@@ -4759,7 +4548,7 @@ RCube *Cube::DoMoveStatic(RCube *start, int move)
 		case MOVE_F2:	MoveFrontTopRight(cube);
 		case MOVE_F:	MoveFrontTopRight(cube);
 							break;
-		
+
 		case MOVE_Fi:	MoveFrontTopLeft(cube);
 							break;
 
@@ -5370,7 +5159,7 @@ void Cube::Print(const RCube &cube)
 	}
 #if defined(MYDBG22)
 	CubieModelShowAllStates(m_anEdgePerm, m_anCornPerm, m_anEdgeOrient, m_anCornOrient);
-#endif	
+#endif
 }
 
 //#define BACKGROUND_ORANGE BACKGROUND_RED|BACKGROUND_GREEN
@@ -5550,7 +5339,7 @@ string Cube::ConvertCube2String(const RCube *p)
 {
 	string ret = string();
 	if (NULL == p)
-		p = m_pCurrent;	
+		p = m_pCurrent;
 
 	CONV_FACE_CODES { ret = ret + FaceSymbol(p->up[i][j]);		}
 	CONV_FACE_CODES { ret = ret + FaceSymbol(p->left[i][j]);	}
@@ -5584,9 +5373,9 @@ string Cube::ConvertCube2InputString(const RCube *p)
 	CONV_FACE_CODES { ret = ret + ' ' + FaceSymbol(p->right[i][j]);		}
 	CONV_FACE_CODES { ret = ret + ' ' + FaceSymbol(p->bottom[i][j]);	}
 	CONV_FACE_CODES { ret = ret + ' ' + FaceSymbol(p->down[i][j]);		}
-	
+
 	string::iterator ret_front = ret.begin();
-	ret.erase(ret_front);	
+	ret.erase(ret_front);
 
 	if (ret.length() != 108 + 108/2 - 1)
 		throw Exception("Cube::ConvertCube2InputString - wrong input format!");
@@ -5613,9 +5402,9 @@ string Cube::ConvertCube2ColorsString(const RCube *p)
 	CONV_FACE_CODES { ret = ret + ' ' + ColorCode(p->right[i][j]);		}
 	CONV_FACE_CODES { ret = ret + ' ' + ColorCode(p->bottom[i][j]);		}
 	CONV_FACE_CODES { ret = ret + ' ' + ColorCode(p->down[i][j]);		}
-	
+
 	string::iterator ret_front = ret.begin();
-	ret.erase(ret_front);	
+	ret.erase(ret_front);
 
 	if (ret.length() != 107)
 		throw Exception("Cube::ConvertCube2ColorsString - wrong input format!");
@@ -5636,7 +5425,7 @@ string Cube::GetColorCubeDefNoSpaces(const RCube *p)
 			colcube_ns = colcube_ns + c;
 		}
 	}
-	
+
 	return colcube_ns;
 }
 
@@ -5651,8 +5440,8 @@ string Cube::ConvertCube2CompactString(const RCube *p)
 {
 	string ret;
 	if (NULL == p)
-		p = m_pCurrent;	
-		
+		p = m_pCurrent;
+
 	CONV_FACE_CODES { ret = ret + string(1,compact_faces_sym_tbl[p->up[i][j]]);		}
 	CONV_FACE_CODES { ret = ret + string(1,compact_faces_sym_tbl[p->left[i][j]]);	}
 	CONV_FACE_CODES { ret = ret + string(1,compact_faces_sym_tbl[p->front[i][j]]);	}
@@ -5706,7 +5495,7 @@ RCube *Cube::ConvertCompactString2Cube(const string s)
 		pret = CreateCubeFromStrVectDef(vcubedef, false);
 	} else
 		throw Exception("Cube::ConvertCompactString2Cube - wrong input format!");
-		
+
 	return pret;
 }
 
@@ -5717,17 +5506,17 @@ RCube *Cube::ConvertCompactString2Cube(const string s)
 string Cube::ConvCompactStrCode2FaceCode(string cpct_code)
 {
 	string ret;
-	
+
 	if (1 < cpct_code.size())
 		throw Exception("Cube::ConvCompactStrCode2FaceCode - invalid input code!");
-	
+
 	for (int i=0; i < 6*9; i++) {
 		if (compact_faces_sym_tbl[i] == cpct_code.at(0)) {
 			ret = faces_sym_tbl[i];
 			break;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -5811,10 +5600,10 @@ void Cube::Add2KnownPaths(const RCube *p)
 string Cube::GetSolutionPath(const RCube *p)
 {
 	if (NULL == p)
-		throw Exception("Cube::GetSolutionPath(RCube *p) - null pointer!");	
+		throw Exception("Cube::GetSolutionPath(RCube *p) - null pointer!");
 	string moves;
 	RCube *ptr = (RCube *)p;
-	
+
 	if (false == m_pMemMgm->FindRCube(ptr))
 		throw Exception ("Cube::GetSolutionPath() - fatal failure - pointer not found in mem. mgm. object!");
 
@@ -5829,7 +5618,7 @@ string Cube::GetSolutionPath(const RCube *p)
 		}
 		ptr = ptr->parent;
 	}
-	
+
 	return moves;
 }
 
@@ -5843,7 +5632,7 @@ string Cube::GetSolutionPath()
 	if (NULL == ptr)
 		throw Exception("Cube::GetSolutionPath() - null pointer!");
 	if (false == m_pMemMgm->FindRCube(ptr))
-		throw Exception ("Cube::GetSolutionPath() - fatal failure - pointer not found in mem. mgm. object!");		
+		throw Exception ("Cube::GetSolutionPath() - fatal failure - pointer not found in mem. mgm. object!");
 	string moves;
 	m_nSolLen = 0;
 	while (ptr != NULL) {
@@ -5858,7 +5647,7 @@ string Cube::GetSolutionPath()
 		}
 		ptr = ptr->parent;
 	}
-	
+
 	return moves;
 }
 
@@ -6003,7 +5792,7 @@ int *Cube::ConvertCubeEdges2OrientTbl(RCube *p)
 {
 	static int eo[NUM_OF_EDGES];
 	int lsc[] = {U3, U5, D3, D5, F1, F3, F5, F7, B1, B3, B5, B7};
-	
+
 	for (int i=0; i<NUM_OF_EDGES; i++) {
 		eo[i] = 0;	// start with wrong orientations
 	}
@@ -6041,12 +5830,12 @@ int *Cube::ConvertCubeEdges2OrientTbl(RCube *p)
 		}
 		if (p->bottom[2][1] == lsc[i]) {	// E11
 			eo[10] = 1;
-		}		
+		}
 		if (p->bottom[0][1] == lsc[i]) {	// E12
 			eo[11] = 1;
 		}
 	}
-	
+
 	// sanity check - cube law #2
 	int sum = 0;
 	for (int i=0; i<NUM_OF_EDGES; i++) {
@@ -6054,8 +5843,8 @@ int *Cube::ConvertCubeEdges2OrientTbl(RCube *p)
 	}
 	if (0 != (sum%2))
 		throw Exception("Cube::ConvertCubeEdges2OrientTbl - algorithm error: cube law #2 failed!");
-	
-	
+
+
 	return eo;
 }
 
@@ -6083,7 +5872,7 @@ int *Cube::ConvertCubeEdges2PermTbl(RCube *p)
 		}
 		if (p->right[2][1] == ef[i]) {	// E4
 			ep[3] = ec[i];
-		}		
+		}
 		if (p->left[1][0] == ef[i]) {	// E5
 			ep[4] = ec[i];
 		}
@@ -6107,9 +5896,9 @@ int *Cube::ConvertCubeEdges2PermTbl(RCube *p)
 		}
 		if (p->bottom[0][1] == ef[i]) {	// E12
 			ep[11] = ec[i];
-		}		
+		}
 	}
-	
+
 	return ep;
 }
 
@@ -6187,7 +5976,7 @@ int *Cube::ConvertCubeCorners2OrientTbl(RCube *p)
 	}
 	if (0 != (s%v)) {
 		cout << "Cube::ConvertCubeCorners2OrientTbl - s=" << s << ", v=" << v << ", s%v=" << (s%v) << endl;
-		throw Exception("Cube::ConvertCubeCorners2OrientTbl - algorithm error: cube law #3 failed!");	
+		throw Exception("Cube::ConvertCubeCorners2OrientTbl - algorithm error: cube law #3 failed!");
 	}
 
 	return co;
@@ -6231,8 +6020,8 @@ int *Cube::ConvertCubeCorners2PermTbl(RCube *p)
 			cp[7] = cc[i];
 		}
 	}
-	
-	return cp;	
+
+	return cp;
 }
 
 /*
@@ -6246,10 +6035,10 @@ void Cube::Convert2CubieModel(RCube *p)
 	EPCopy(ConvertCubeEdges2PermTbl(p), m_anEdgePerm);
 	COCopy(ConvertCubeCorners2OrientTbl(p), m_anCornOrient);
 	CPCopy(ConvertCubeCorners2PermTbl(p), m_anCornPerm);
-#if defined(MYDBG18)	
+#if defined(MYDBG18)
 	cout << "MYDBG18: Cube::Convert2CubieModel - converted cubie model:" << endl;
 	CubieModelShowAllStates(m_anEdgePerm, m_anCornPerm, m_anEdgeOrient, m_anCornOrient);
-#endif	
+#endif
 }
 
 /*
@@ -6259,12 +6048,12 @@ void Cube::Convert2CubieModel(RCube *p)
 CubieModelState Cube::GetCubieModelState()
 {
 	CubieModelState ret;
-	
+
 	EOCopy(m_anEdgeOrient, ret.eo);
 	EPCopy(m_anEdgePerm, ret.ep);
 	COCopy(m_anCornOrient, ret.co);
 	CPCopy(m_anCornPerm, ret.cp);
-	
+
 	return ret;
 }
 

@@ -39,8 +39,8 @@
 #ifndef _CUBE_H
 #define _CUBE_H
 
-#define DOS 1
-//#define UNIX
+// #define DOS 1
+#define UNIX 1
 #define SOCKET_PORT 5025
 
 #include <string>
@@ -168,15 +168,15 @@ enum MovesN {
 enum MovesD {
 	MOVE_F2 = MAX_MOVES,
 	MOVE_F2i,
-	MOVE_L2i,	
+	MOVE_L2i,
 	MOVE_L2,
-	MOVE_U2i,	
+	MOVE_U2i,
 	MOVE_U2,
 	MOVE_R2,
 	MOVE_R2i,
 	MOVE_D2,
 	MOVE_D2i,
-	MOVE_B2i,	
+	MOVE_B2i,
 	MOVE_B2,
 	MAX_DMOVES // keep this one at last position
 };
@@ -256,7 +256,6 @@ class Cube
 		int    				m_nMethod;
 		bool   				m_bShow;
 		MapKnownPaths		m_MapKnownPaths;
-		bool          		m_bMono;						// monochrome/color
 		bool				m_bUpdateCache;					// update known solutions map or not
 		bool				m_bCacheLoaded;
 		double				m_fSolvedSecs;					// time taken to solve (seconds)
@@ -274,11 +273,11 @@ class Cube
 		vector<CPS>			m_vCornPermG3;	// set of corner permutations in G3
 		int					m_naPruneG4[PRUNE_G4_SIZE_N][PRUNE_G4_SIZE_M];
 		map<int,int> 		m_MapIndex2nG4; // this map is the lookup index to the 'n' column of prune table
-		map<int,int> 		m_MapIndex2mG4; // this map is the lookup index to the 'm' column of prune table		
+		map<int,int> 		m_MapIndex2mG4; // this map is the lookup index to the 'm' column of prune table
 		bool				m_bPruneG1Gen;		// flag telling if prune table for stage 1 was generated
 		bool				m_bPruneG2Gen;		// flag telling if prune table for stage 2 was generated
 		bool				m_bPruneG3Gen;		// flag telling if prune table for stage 3 was generated
-		bool				m_bPruneG4Gen;		// flag telling if prune table for stage 4 was generated		
+		bool				m_bPruneG4Gen;		// flag telling if prune table for stage 4 was generated
 		//	cubie model
 		int					m_anCornPerm[NUM_OF_CORNERS];
 		int					m_anEdgePerm[NUM_OF_EDGES];
@@ -389,9 +388,9 @@ class Cube
 		bool				SaveLookupG2();
 		bool				LoadLookupG2();
 		bool				SaveLookupG3();
-		bool				LoadLookupG3();		
+		bool				LoadLookupG3();
 		bool				SaveLookupG4();
-		bool				LoadLookupG4();		
+		bool				LoadLookupG4();
 		int					*ConvertCubeEdges2OrientTbl(RCube *p);
 		int					*ConvertCubeEdges2PermTbl(RCube *p);
 		int					*ConvertCubeCorners2OrientTbl(RCube *p);
@@ -410,7 +409,7 @@ class Cube
 		template<typename T>
 		bool 				SaveLookupMap(string fn, T map2save);
 		unsigned long long 	MemoryUsed();
-		unsigned long long 	TotalSystemMemory();		
+		unsigned long long 	TotalSystemMemory();
 
 	public:
 		Cube ();

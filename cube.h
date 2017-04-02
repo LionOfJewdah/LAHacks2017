@@ -58,6 +58,10 @@ private:
         edge_piece edge;
         char o;
     };
+
+    /** Edges can have good (1) or bad (0) orientation.
+    *   Corners can have good (0), clockwise twist (1) or
+    *   counter clock wise twist (2) orientation. */
     corner_o mCorners[8];
     edge_o mEdges[12];
     bool _isSolved;
