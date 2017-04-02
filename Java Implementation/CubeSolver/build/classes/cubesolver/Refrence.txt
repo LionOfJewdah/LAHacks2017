@@ -1,0 +1,19 @@
+
+
+Cube_colors = GreenCW(Cube_colors);
+Cube_colors = GreenCCW(Cube_colors);
+
+Cube_colors = WhiteCW(Cube_colors);
+Cube_colors = WhiteCCW(Cube_colors);
+
+Cube_colors = BlueCW(Cube_colors);
+Cube_colors = BlueCCW(Cube_colors);
+
+Cube_colors = YellowCW(Cube_colors);
+Cube_colors = YellowCCW(Cube_colors);
+
+Cube_colors = OrangeCW(Cube_colors);
+Cube_colors = OrangeCCW(Cube_colors);
+
+Cube_colors = RedCW(Cube_colors);
+Cube_colors = RedCCW(Cube_colors);

@@ -1,0 +1,12 @@
+// TODO code application logic here
+                //VARABLES
+                /*
+                 * The first and second array number is the location
+                 * and the value is the color
+                 * 1 = GREEN
+                 * 2 = WHITE
+                 * 3 = BLUE
+                 * 4 = YELLOW
+                 * 5 = ORANGE
+                 * 6 = RED
+                 */
