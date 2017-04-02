@@ -1,3 +1,6 @@
+#ifndef UTIL_H
+#define UTIL_H 1
+
 #include <string>
 class CubieCube;
 // #include "cubieCube.h"
@@ -319,3 +322,5 @@ namespace Util {
 		}
 	}
 }
+
+#endif // UTIL_H

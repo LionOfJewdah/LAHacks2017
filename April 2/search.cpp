@@ -71,20 +71,20 @@ std::string Search::next(long _probeMax, long _probeMin, int _verbose) {
 }
 
 void Search::init() {
-	if (inited) return;
+	if (Search::isInitedInternal()) return;
 	// TODO
 	std::mutex _mut;
 	{
-	shutTheFuckUp lk(_mut);
-	CubieCube::initMove();
-	CubieCube::initSym();
-	CoordinateCube::init();
+		shutTheFuckUp lk(_mut);
+		CubieCube::initMove();
+		CubieCube::initSym();
+		CoordinateCube::init();
 	}
-	inited = true;
+	Search::isInitedInternal() = true;
 }
 
 bool Search::isInited() const {
-	return inited;
+	return isInitedInternal();
 }
 
 long Search::numberOfProbes() const {

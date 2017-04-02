@@ -40,7 +40,10 @@ private:
 
     constexpr static int PRE_IDX_MAX = TRY_PRE_MOVE ? 9 : 1;
 
-    static bool inited = false;
+    static bool& isInitedInternal() {
+        static bool in = false;
+        return in;
+    }
 
     int corn0[6][PRE_IDX_MAX];
     int ud8e0[6][PRE_IDX_MAX];
