@@ -1,6 +1,7 @@
 #include "cubieCube.h"
 #include "coordinateCube.h"
 #include <cassert>
+#include "search.h"
 
 char CubieCube::FlipR2S[2048];// = new char[2048];
 char CubieCube::TwistR2S[2048];// = new char[2187];
@@ -181,9 +182,10 @@ int CubieCube::getFlipSym() {
 	for (int k = 0; k < 16; k += 2) {
 		EdgeConjugate(*this, SymInv[k], temps);
 		// TODO: sub std::upper_bound;
-		int idx = Arrays.binarySearch(FlipS2R, (char) temps.getFlip());
+		// int idx = Arrays.binarySearch(FlipS2R, (char) temps.getFlip());
+		int idx = std::upper_bound(FlipS2R, (char) temps->getFlip());
 		if (idx >= 0) {
-			delete temps;
+			if (temps) delete temps;
 			return idx << 3 | k >> 1;
 		}
 	}

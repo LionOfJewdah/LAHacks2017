@@ -1,5 +1,6 @@
 #ifndef CUBIECUBE_H
 #define CUBIECUBE_H
+#include <string>
 
 class CubieCube {
 public:
