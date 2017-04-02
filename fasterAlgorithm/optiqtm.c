@@ -23,7 +23,7 @@ static sigjmp_buf jump_buf;
 CubieCube cc_a;
 
 
-#ifdef _LINUX_ 
+#ifdef _LINUX_
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void  user_break(int  n)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -72,20 +72,20 @@ for (l=0;l<NTWIST;l++)
 movesCloserToTarget[l] = (short *)calloc(NFLIPSLICE*2,2);
 
 printf("initializing tables");fflush(stdout);
-initSymCubes();
-initMoveCubes();
-initInvSymIdx();
-initSymIdxMultiply();
-initMoveConjugate();
-initMoveBitsConjugate();
-initGESymmetries();
-initTwistConjugate();pp();
-initRawFLipSliceRep();pp();
-initTwistMove();pp();
+initSymCubes();  // initializes symmetry cubes: symmetry.c line 27
+initMoveCubes(); // cubes representing single quarter turns: cubiecube.c line 101
+initInvSymIdx(); // stores the index of the inverse symmetry cube
+initSymIdxMultiply(); // symmetry.c line 73
+initMoveConjugate();  // symmetry.c line 92
+initMoveBitsConjugate(); // allows symmetry cubes to benefit from previous function's analysis
+initGESymmetries();  // initialize the edge symmetries -
+initTwistConjugate();pp(); // corner twists and their conjugates
+initRawFLipSliceRep();pp();//
+initTwistMove();pp();      // provides a lookup table for twist values of the cube after the move is executed, and stores this result as a ternary number (where each ternary digit represents the twist state of 1 corner.)
 initCorn6PosMove();pp();
 initEdge4PosMove();pp();
 initEdge6PosMove();pp();
-initSymFlipSliceClassMove();pp();
+initSymFlipSliceClassMove();pp(); // coordcube.c line 396 
 initMovesCloserToTarget();pp();
 initNextMove();pp();
 printf("\r\n");
@@ -102,7 +102,7 @@ while (1)
 	if (strlen(manString)==0) continue;//ignore empty lines
 	printf("\nsolving optimal: %s\n",manString);fflush(stdout);
 	cc_a = stringToCubieCube(manString);
-	#ifdef _LINUX_ 
+	#ifdef _LINUX_
   	if (sigsetjmp(jump_buf, 1) == 0)
 	{
 		signal(SIGINT, user_break);

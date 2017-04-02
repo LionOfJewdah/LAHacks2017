@@ -46,7 +46,7 @@ for (a=0;a<3;a++)					//S_URF3
 		}
 		multiply(&ci,&basicSymCube[S_F2],&cb);
 		ci = cb;
-	}	
+	}
 	multiply(&ci,&basicSymCube[S_URF3],&cb);
 	ci = cb;
 }
@@ -60,7 +60,7 @@ CubieCube cc;
 int j,k;
 for (j=0;j<NSYM_Oh;j++)
 for (k=0;k<NSYM_Oh;k++)
-{	
+{
 	cornerMultiply(&symCube[j],&symCube[k],&cc);
 	if (cc.co[URF].c == URF && cc.co[UFL].c == UFL && cc.co[ULB].c == ULB)
 	{
@@ -82,7 +82,7 @@ for (j=0;j<NSYM_Oh;j++)
 	edgeMultiply(&symCube[i],&symCube[j],&cc);
 	for (k=0;k<NSYM_Oh;k++)//find the product cube
 	{
-		if (symCube[k].eo[UR].e==cc.eo[UR].e && 
+		if (symCube[k].eo[UR].e==cc.eo[UR].e &&
 		    symCube[k].eo[UF].e==cc.eo[UF].e) {symIdxMultiply[i][j] = k; break;}
 	}
 }
@@ -103,11 +103,11 @@ for (j=0;j<NSYM_Oh;j++)
 	{
 		match=1;
 		for (l=UR;l<=BR;l++)//test all edges
-			if (moveCube[k].eo[l].e!=cc.eo[l].e) {match=0; break;} 
+			if (moveCube[k].eo[l].e!=cc.eo[l].e) {match=0; break;}
 		if (match==1)
 		{moveConjugate[i][j] = k; break;}
-	}	
-}	
+	}
+}
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -124,8 +124,8 @@ for (i=0;i<NTWIST;i++)
 	{
 		ccConj = cornerConjugate(cc,j);
 		twistConjugate[i][j] = twist(ccConj);
-	}	
-}	
+	}
+}
 }
 
 
@@ -135,7 +135,7 @@ CubieCube edgeConjugate(CubieCube cc, int symIdx)
 {
 CubieCube ccTmp;
 edgeMultiply(&symCube[symIdx],&cc,&ccTmp);
-edgeMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);	
+edgeMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);
 return cc;
 }
 
@@ -145,7 +145,7 @@ CubieCube cornerConjugate(CubieCube cc, int symIdx)
 {
 CubieCube ccTmp;
 cornerMultiply(&symCube[symIdx],&cc,&ccTmp);
-cornerMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);	
+cornerMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);
 return cc;
 }
 
@@ -184,12 +184,12 @@ unsigned long long getSymmetries(CubieCube cc)
 int hasThisSym,symIdx;
 unsigned long long symRet=0;
 CubieCube ccTmp1,ccTmp;
-Corner i; Edge j;	
+Corner i; Edge j;
 for (symIdx=0;symIdx<48;symIdx++)
 {
 	hasThisSym=1;
 	cornerMultiply(&symCube[symIdx],&cc,&ccTmp1);
-	cornerMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);	
+	cornerMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);
 	edgeMultiply(&symCube[symIdx],&cc,&ccTmp1);
 	edgeMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);
 	for (i=URF;i<=DRB;i++)
@@ -205,8 +205,8 @@ for (symIdx=0;symIdx<48;symIdx++)
 	}
 	if (hasThisSym) symRet |= 1ULL<<symIdx;
 }
-return symRet;	
-	
+return symRet;
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -214,7 +214,7 @@ int symCount(unsigned long long sym)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 int i=0;
-while (sym!=0) 
+while (sym!=0)
 {
 	if (sym&1) i++;
 	sym=sym>>1;
