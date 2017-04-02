@@ -9,10 +9,10 @@ template <typename T>
 // move a->b, b->c, c->d, d->a
 void quarterTurn(T& a, T& b, T& c, T& d) {
     T tmp(a);
-    a = d;
-    d = c;
-    c = b;
-    b = tmp;
+    a = b;
+    b = c;
+    c = d;
+    d = tmp;
 }
 
 template <typename T>

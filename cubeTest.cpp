@@ -3,6 +3,10 @@
 
 class CubeTest : public ::testing::Test {
 protected:
+	const int solvedCorners[8] = {1, 3, 5, 7, 13, 15, 17, 19};
+	const int solvedEdges[12] = {2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20};
+	
+
 	CubeTest() : unsolvedCube(unsolvedCorners, unsolvedEdges) {
 
 	}
@@ -12,20 +16,24 @@ protected:
 
 	Cube solvedCube;
 	Cube unsolvedCube;
-	
-	const int solvedCorners[8] = {1, 3, 5, 7, 13, 15, 17, 19};
-	const int solvedEdges[12] = {2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20};
-	
-	const int unsolvedCorners[8] = {17, 1, 13, 19, 5, 7, 15, 3};
-	const int unsolvedEdges[12] = {10, 6, 16, 9, 14, 8, 4, 11, 12, 18, 2, 20};
+public:
+	constexpr static int 
+		unsolvedCorners[8] = {17, 1, 13, 19, 5, 7, 15, 3};
+	constexpr static int 
+		unsolvedEdges[12] = {10, 6, 16, 9, 14, 8, 4, 11, 12, 18, 2, 20};
 };
+constexpr int CubeTest::
+	unsolvedCorners[8];// = {17, 1, 13, 19, 5, 7, 15, 3};
+constexpr int CubeTest:: 
+	unsolvedEdges[12];// = {10, 6, 16, 9, 14, 8, 4, 11, 12, 18, 2, 20};
+
 
 TEST_F(CubeTest, CheckMemberVariablesAfterConstruction) {
 	EXPECT_TRUE(solvedCube.isSolved());
 	EXPECT_FALSE(unsolvedCube.isSolved());
 	for (int i = 0; i < 8; i++) {
 		EXPECT_EQ(solvedCorners[i], solvedCube.get_corners()[i]);
-		EXPECT_EQ(unsolvedEdges[i], unsolvedCube.get_corners()[i]);
+		EXPECT_EQ(unsolvedCorners[i], unsolvedCube.get_corners()[i]);
 	}
 	for (int i = 0; i < 12; i++) {
 		EXPECT_EQ(solvedEdges[i], solvedCube.get_edges()[i]);
@@ -136,7 +144,7 @@ TEST_F(CubeTest, CheckAllDownFunctions) {
 	solvedCube.turnDown2();
 	EXPECT_TRUE(solvedCube.isSolved());
 }
-
+/*
 TEST_F(CubeTest, CheckAllFrontFunctions) {
 	solvedCube.turnFront();
 	int newCorners[] = {1, 3, 5, 7, 13, 15, 17, 19};
@@ -188,6 +196,27 @@ TEST_F(CubeTest, CheckAllFrontFunctions) {
 	solvedCube.turnFront2();
 	EXPECT_TRUE(solvedCube.isSolved());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 TEST_F(CubeTest, CheckAllBackFunctions) {
 	solvedCube.turnBack();
@@ -392,3 +421,4 @@ TEST_F(CubeTest, CheckMoveInverse360Quarter) {
 
 TEST_F(CubeTest, CheckMove360Half) {
 }
+*/
