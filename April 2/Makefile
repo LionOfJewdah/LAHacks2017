@@ -31,6 +31,7 @@ first: all
 ####### Implicit rules
 
 .cpp.o:
+	reset
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
 
 ####### Build rules

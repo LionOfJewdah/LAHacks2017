@@ -26,26 +26,28 @@ void CoordinateCube::init() {
 }
 
 void CoordinateCube::calcPruning(boolean isPhase1) {
-		prun = max(
-								max(
-										getPruning(UDSliceTwistPrun, twist * N_SLICE + UDSliceConj[slice & 0x1ff][tsym]),getPruning(UDSliceFlipPrun,
-																	flip * N_SLICE + UDSliceConj[slice & 0x1ff][fsym])),
-									 getPruning(TwistFlipPrun,
-													 twist << 11 | CubieCube.FlipS2RF[flip << 3 | CubieCube.Sym8MultInv[fsym << 3 | tsym]]); // twist multiplied by 2048
-													 // flip is multiplied by 8 because CubieCube stores the symmetry class differently
+	prun = max(
+		max(
+			getPruning(UDSliceTwistPrun, twist * N_SLICE + UDSliceConj[slice & 0x1ff][tsym]),
+				getPruning(UDSliceFlipPrun,
+					flip * N_SLICE + UDSliceConj[slice & 0x1ff][fsym])),
+		 			getPruning(TwistFlipPrun,
+					twist << 11 | CubieCube.FlipS2RF[flip << 3 | CubieCube.Sym8MultInv[fsym << 3 | tsym]]);
+	// twist multiplied by 2048
+	// flip is multiplied by 8 because CubieCube stores the symmetry class differently
 }
 
 		/*
-		
+
 		Uses bit operations to save time due to large number of function calls
-		
+
 		table[index >> 3] ^= (0xf ^ value) << ((index & 7) << 2);
 		int indDiv8 = index / 8;
 		int xorMask = 0b1111 ^ value;
 		int indMod8 = index % 8;
 		xorMask = xorMask * 2^(4*indMod8);
 		table[indDiv8] = table[indDiv8] ^ xorMask;
-		
+
 		*/
 void CoordinateCube::setPruning(int[] table, int index, int value) {
 		 table[index >> 3] ^= (0xf ^ value) << ((index & 7) << 2);
@@ -54,79 +56,79 @@ void CoordinateCube::setPruning(int[] table, int index, int value) {
 int CoordinateCube::getPruning(int[] table, int index) {
 		return table[index >> 3] >> ((index & 7) << 2) & 0xf;
 }
-		
-		
+
+
 void CoordinateCube::initRawSymPrun(
 	 int[] PrunTable, const int INV_DEPTH,
 	 const std::vector<std::string>& RawMove, const std::vector<std::string>& RawConj,
 	 const std::vector<std::string>& SymMove, const std::string& SymState,
-	 const int PrunFlag) 
+	 const int PrunFlag)
 {
-		const int SYM_SHIFT = PrunFlag & 0xf;
-		const bool SymSwitch = ((PrunFlag >> 4) & 1) == 1;
-		const bool MoveMapSym = ((PrunFlag >> 5) & 1) == 1;
-		const bool MoveMapRaw = ((PrunFlag >> 6) & 1) == 1;
+	const int SYM_SHIFT = PrunFlag & 0xf;
+	const bool SymSwitch = ((PrunFlag >> 4) & 1) == 1;
+	const bool MoveMapSym = ((PrunFlag >> 5) & 1) == 1;
+	const bool MoveMapRaw = ((PrunFlag >> 6) & 1) == 1;
 
-		const int SYM_MASK = (1 << SYM_SHIFT) - 1;
-		const int N_RAW = RawMove.length;
-		const int N_SYM = SymMove.length;
-		const int N_SIZE = N_RAW * N_SYM;
-		const int N_MOVES = MoveMapRaw ? 10 : RawMove[0].length;
+	const int SYM_MASK = (1 << SYM_SHIFT) - 1;
+	const int N_RAW = RawMove.length;
+	const int N_SYM = SymMove.length;
+	const int N_SIZE = N_RAW * N_SYM;
+	const int N_MOVES = MoveMapRaw ? 10 : RawMove[0].length;
 
-		for (int i = 0; i < (N_RAW * N_SYM + 7) / 8; i++) {
-				PrunTable[i] = -1;
-		}
-		setPruning(PrunTable, 0, 0);
+	for (int i = 0; i < (N_RAW * N_SYM + 7) / 8; i++) {
+			PrunTable[i] = -1;
+	}
+	setPruning(PrunTable, 0, 0);
 
-		int depth = 0;
-		int done = 1;
+	int depth = 0;
+	int done = 1;
 
-		while (done < N_SIZE) {
-				bool inv = depth > INV_DEPTH;
-				int select = inv ? 0xf : depth;
-				int check = inv ? depth : 0xf;
-				depth++;
-				int val = 0;
-				for (int i = 0; i < N_SIZE; i++, val >>= 4) {
-						if ((i & 7) == 0) {
-								val = PrunTable[i >> 3];
-								if (!inv && val == -1) {
-										i += 7;
-										continue;
-								}
-						}
-						if ((val & 0xf) != select) {
+	while (done < N_SIZE) {
+		bool inv = depth > INV_DEPTH;
+		int select = inv ? 0xf : depth;
+		int check = inv ? depth : 0xf;
+		depth++;
+		int val = 0;
+		for (int i = 0; i < N_SIZE; i++, val >>= 4) {
+			if ((i & 7) == 0) {
+					val = PrunTable[i >> 3];
+					if (!inv && val == -1) {
+							i += 7;
+							continue;
+					}
+			}
+			if ((val & 0xf) != select) {
+					continue;
+			}
+			int raw = i % N_RAW;
+			int sym = i / N_RAW;
+			for (int m = 0; m < N_MOVES; m++) {
+				int symx = SymMove[sym][MoveMapSym ? Util.ud2std[m] : m];
+				int rawx = RawConj[RawMove[raw][MoveMapRaw ? Util.ud2std[m] : m] & 0x1ff][symx & SYM_MASK];
+				symx >>= SYM_SHIFT;
+				int idx = symx * N_RAW + rawx;
+				if (getPruning(PrunTable, idx) != check) {
+						continue;
+				}
+				done++;
+				if (inv) {
+						setPruning(PrunTable, i, depth);
+						break;
+				}
+				setPruning(PrunTable, idx, depth);
+				for (int j = 1, symState = SymState[symx]; (symState >>= 1) != 0; j++) {
+						if ((symState & 1) != 1) {
 								continue;
 						}
-						int raw = i % N_RAW;
-						int sym = i / N_RAW;
-						for (int m = 0; m < N_MOVES; m++) {
-								int symx = SymMove[sym][MoveMapSym ? Util.ud2std[m] : m];
-								int rawx = RawConj[RawMove[raw][MoveMapRaw ? Util.ud2std[m] : m] & 0x1ff][symx & SYM_MASK];
-								symx >>= SYM_SHIFT;
-								int idx = symx * N_RAW + rawx;
-								if (getPruning(PrunTable, idx) != check) {
-										continue;
-								}
+						int idxx = symx * N_RAW + RawConj[rawx][j ^ (SymSwitch ? CubieCube.e2c[j] : 0)];
+						if (getPruning(PrunTable, idxx) == 0xf) {
+								setPruning(PrunTable, idxx, depth);
 								done++;
-								if (inv) {
-										setPruning(PrunTable, i, depth);
-										break;
-								}
-								setPruning(PrunTable, idx, depth);
-								for (int j = 1, symState = SymState[symx]; (symState >>= 1) != 0; j++) {
-										if ((symState & 1) != 1) {
-												continue;
-										}
-										int idxx = symx * N_RAW + RawConj[rawx][j ^ (SymSwitch ? CubieCube.e2c[j] : 0)];
-										if (getPruning(PrunTable, idxx) == 0xf) {
-												setPruning(PrunTable, idxx, depth);
-												done++;
-										}
-								}
 						}
 				}
+			}
 		}
+	}
 }
 
 void CoordinateCube::initUDSliceMoveConj() {
@@ -365,7 +367,7 @@ int CoordinateCube::doMovePrun(CoordCube cc, int m, boolean isPhase1) {
 															twist * N_SLICE + UDSliceConj[slice][tsym]),
 									 getPruning(UDSliceFlipPrun,
 															flip * N_SLICE + UDSliceConj[slice][fsym])),
-													getPruning(TwistFlipPrun, twist << 11 | 
+													getPruning(TwistFlipPrun, twist << 11 |
 															CubieCube.FlipS2RF[flip << 3 | CubieCube.Sym8MultInv[fsym << 3 | tsym]]));
 		return prun;
 }
