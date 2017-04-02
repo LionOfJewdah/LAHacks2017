@@ -12,29 +12,27 @@
 #ifdef DEBUG
 #include <iostream>
 constexpr char* cubieNames[] =  { /*0*/ "",
-        /*1*/  "[1]: white-orange-green corner",
-
-        /*3*/  "[3]: white-green-red corner",
-
-        /*5*/  "[5]: white-red-blue corner",
-
-        /*7*/  "[7]: white-blue-orange corner",
-
-        /*13*/ "[13]: yellow-orange-green corner",
-
-        /*15*/ "[15]: yellow-green-red corner",
-
-        /*17*/ "[17]: yellow-red-blue corner",
-
-        /*19*/ "[19]: yellow-blue-orange corner",
-
-    };
-
-    enum edge_piece {
-        WG = 2,  WR = 4,  WB = 6,  WO = 8,
-        OG = 9,  GR = 10, RB = 11, BO = 12,
-        GY = 14, RY = 16, BY = 18, OY = 20
-    };
+    /*1*/   "[1]: white-orange-green corner",
+    /*2*/   "[2]: white-green edge",
+    /*3*/   "[3]: white-green-red corner",
+    /*4*/   "[4]: white-red edge",
+    /*5*/   "[5]: white-red-blue corner",
+    /*6*/   "[6]: white-blue edge",
+    /*7*/   "[7]: white-blue-orange corner",
+    /*8*/   "[8]: white-orange edge",
+    /*9*/   "[9]: orange-green edge",
+    /*10*/  "[10]: green-red edge",
+    /*11*/  "[11]: red-blue edge",
+    /*12*/  "[12]: blue-orange edge",
+    /*13*/  "[13]: yellow-orange-green corner",
+    /*14*/  "[14]: green-yellow edge",
+    /*15*/  "[15]: yellow-green-red corner",
+    /*16*/  "[16]: red-yellow edge",
+    /*17*/  "[17]: yellow-red-blue corner",
+    /*18*/  "[18]: blue-yellow edge",
+    /*19*/  "[19]: yellow-blue-orange corner",
+    /*20*/  "[20]: orange-yellow edge",
+};
 #endif // DEBUG
 
 extern const Cube totallySolvedCube;
