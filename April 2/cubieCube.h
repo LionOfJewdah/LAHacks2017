@@ -1,7 +1,6 @@
 #ifndef CUBIECUBE_H
 #define CUBIECUBE_H
 #include <string>
-#include "util.h"
 
 class CubieCube {
 public:

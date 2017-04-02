@@ -1,3 +1,8 @@
+#include <string>
+class CubieCube;
+// #include "cubieCube.h"
+#include <cstring>
+
 namespace Util {
 	bool initedUtil = false;
 
@@ -5,39 +10,8 @@ namespace Util {
 		40320, 362880, 3628800, 39916800, 479001600, 6227020800
 	};
 
-	void initUtil() {
-		if (initedUtil) return;
-		for (int i = 0; i < 10; i++) {
-			std2ud[ud2std[i]] = i;
-		}
-		for (int i = 0; i < 10; i++) {
-			int ix = ud2std[i];
-			for (int j = 0; j < 10; j++) {
-				int jx = ud2std[j];
-				ckmv2[i][j] = (ix / 3 == jx / 3) || ((ix / 3 % 3 == jx / 3 % 3) && (ix >= jx));
-			}
-			ckmv2[10][i] = false;
-		}
-		fact[0] = 1;
-		for (int i = 0; i < 13; i++) {
-			Cnk[i][0] = Cnk[i][i] = 1;
-			for (int j = 1; j < i; j++) {
-				Cnk[i][j] = Cnk[i - 1][j - 1] + Cnk[i - 1][j];
-			}
-		}
-		char arr1[4], arr2[4], arr3[4];
-		for (int i = 0; i < 24; i++) {
-			setNPerm(arr1, i, 4, false);
-			for (int j = 0; j < 24; j++) {
-				setNPerm(arr2, j, 4, false);
-				for (int k = 0; k < 4; k++) {
-					arr3[k] = arr1[arr2[k]];
-				}
-				permMult[i][j] = getNPerm(arr3, 4, false);
-			}
-		}
-		initedUtil = true;
-	}
+	void setNPerm(const char arr[], int idx, int n, bool isEdge);
+	int getNPerm(const char arr[], int n, bool isEdge);
 
 	//Moves
 	constexpr char Ux1 = 0;
@@ -132,18 +106,48 @@ namespace Util {
 		{ D4, L8 }, { D8, B8 }, { F6, R4 }, { F4, L6 }, { B6, L4 }, { B4, R6 }
 	};
 
-	constexpr long fact[14] = {1, 1, 2, 6, 24, 120, 720, 5040,
-		40320, 362880, 3628800, 39916800, 479001600, 6227020800
-	};
-
 	int preMove[] = { -1, Rx1, Rx3, Fx1, Fx3, Lx1, Lx3, Bx1, Bx3};
 	int ud2std[] = {Ux1, Ux2, Ux3, Rx2, Fx2, Dx1, Dx2, Dx3, Lx2, Bx2};
 	int std2ud [18];
 	bool ckmv2 [11][10];
 	int Cnk[13][13];
-	static permMult[24][24];
+	int permMult[24][24];
 
-   void toCubieCube(char[] f, CubieCube& ccRet) {
+	void initUtil() {
+		if (initedUtil) return;
+		for (int i = 0; i < 10; i++) {
+			std2ud[ud2std[i]] = i;
+		}
+		for (int i = 0; i < 10; i++) {
+			int ix = ud2std[i];
+			for (int j = 0; j < 10; j++) {
+				int jx = ud2std[j];
+				ckmv2[i][j] = (ix / 3 == jx / 3) || ((ix / 3 % 3 == jx / 3 % 3) && (ix >= jx));
+			}
+			ckmv2[10][i] = false;
+		}
+		for (int i = 0; i < 13; i++) {
+			Cnk[i][0] = Cnk[i][i] = 1;
+			for (int j = 1; j < i; j++) {
+				Cnk[i][j] = Cnk[i - 1][j - 1] + Cnk[i - 1][j];
+			}
+		}
+		char arr1[4], arr2[4], arr3[4];
+		for (int i = 0; i < 24; i++) {
+			setNPerm(arr1, i, 4, false);
+			for (int j = 0; j < 24; j++) {
+				setNPerm(arr2, j, 4, false);
+				for (int k = 0; k < 4; k++) {
+					arr3[k] = arr1[arr2[k]];
+				}
+				permMult[i][j] = getNPerm(arr3, 4, false);
+			}
+		}
+		initedUtil = true;
+	}
+
+
+   void toCubieCube(char f[], CubieCube& ccRet) {
 		char ori;
 		for (int i = 0; i < 8; i++)
 			ccRet.ca[i] = 0;// invalidate corners
@@ -222,7 +226,7 @@ namespace Util {
 		return isEdge ? val0 >> 1 : val0 & 7;
 	}
 
-	void set8Perm(char[] arr, int idx, bool isEdge) {
+	void set8Perm(char arr[], int idx, bool isEdge) {
 		int val = 0x76543210;
 		for (int i = 0; i < 7; i++) {
 			int p = fact[7 - i];
@@ -236,7 +240,7 @@ namespace Util {
 		arr[7] = setVal(arr[7], val, isEdge);
 	}
 
-	int get8Perm(char[] arr, bool isEdge) {
+	int get8Perm(char arr[], bool isEdge) {
 		int idx = 0;
 		int val = 0x76543210;
 		for (int i = 0; i < 7; i++) {
@@ -247,7 +251,7 @@ namespace Util {
 		return idx;
 	}
 
-	void setNPerm(char[] arr, int idx, int n, bool isEdge) {
+	void setNPerm(char arr[], int idx, int n, bool isEdge) {
 		arr[n - 1] = setVal(arr[n - 1], 0, isEdge);
 		for (int i = n - 2; i >= 0; i--) {
 			int arri = idx % (n - i);
@@ -262,7 +266,7 @@ namespace Util {
 		}
 	}
 
-	int getNPerm(char[] arr, int n, bool isEdge) {
+	int getNPerm(char arr[], int n, bool isEdge) {
 		int idx = 0;
 		for (int i = 0; i < n; i++) {
 			idx *= (n - i);
@@ -277,7 +281,7 @@ namespace Util {
 		return idx;
 	}
 
-	int getComb(char[] arr, int mask, bool isEdge) {
+	int getComb(char arr[], int mask, bool isEdge) {
 		int end = std::strlen(arr);
 		int idxC = 0, idxP = 0, r = 4, val = 0x0123;
 		for (int i = end; i >= 0; i--) {
@@ -289,10 +293,10 @@ namespace Util {
 				idxC += Cnk[i][r--];
 			}
 		}
-		return idxP << 9 | Cnk[arr.length][4] - 1 - idxC;
+		return idxP << 9 | Cnk[end + 1][4] - 1 - idxC;
 	}
 
-	int setComb(char[] arr, int idx, int mask, bool isEdge) {
+	int setComb(char arr[], int idx, int mask, bool isEdge) {
 		int end = std::strlen(arr);
 		int r = 4, fill = end, val = 0x0123;
 		int idxC = Cnk[end+1][4] - 1 - (idx & 0x1ff);

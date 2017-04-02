@@ -40,8 +40,6 @@ private:
 
     constexpr static bool inited = false;
 
-    int move[31];
-
     int corn0[6][PRE_IDX_MAX];
     int ud8e0[6][PRE_IDX_MAX];
 
@@ -72,7 +70,7 @@ private:
     mutable std::mutex _mut;
     using shutTheFuckUp = std::lock_guard<std::mutex>;
 
-    private bool isRec;
+    bool isRec;
 
     /**
      *     Verbose_Mask determines if a " . " separates the phase1 and phase2 parts of the solver string like in F' R B R L2 F .

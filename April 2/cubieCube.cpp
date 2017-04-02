@@ -3,6 +3,7 @@
 #include <cassert>
 #include "search.h"
 #include <algorithm>
+#include "util.h"
 
 char CubieCube::FlipR2S[2048];// = new char[2048];
 char CubieCube::TwistR2S[2048];// = new char[2187];
@@ -157,7 +158,7 @@ void CubieCube::URFConjugate() {
 // Twist : Orientation of 8 Corners. Raw[0, 2187) Sym[0, 324 * 8)
 // UDSlice : Positions of the 4 UDSlice edges, the order is ignored. [0, 495)
 
-int CubieCube::getFlip() {
+int CubieCube::getFlip() const {
 	int idx = 0;
 	for (int i = 0; i < 11; i++) {
 		idx = idx << 1 | ea[i] & 1;
@@ -368,7 +369,7 @@ int CubieCube::verify() {
 }
 
 long CubieCube::selfSymmetry() {
-	CubieCube c(this);
+	CubieCube c(*this);
 	CubieCube d;
 	long sym = 0L;
 	for (int i = 0; i < 48; i++) {
@@ -386,9 +387,9 @@ long CubieCube::selfSymmetry() {
 	c.invCubieCube();
 	for (int i = 0; i < 48; i++) {
 		CornConjugate(c, SymInv[i % 16], d);
-		if (d.equalsCorn(this)) {
+		if (d.equalsCorn(*this)) {
 			EdgeConjugate(c, SymInv[i % 16], d);
-			if (d.equalsEdge(this)) {
+			if (d.equalsEdge(*this)) {
 				sym |= 1L << 48;
 				break;
 			}
