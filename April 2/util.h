@@ -240,7 +240,7 @@ namespace Util {
 		arr[7] = setVal(arr[7], val, isEdge);
 	}
 
-	int get8Perm(char arr[], bool isEdge) {
+	int get8Perm(const char arr[], bool isEdge) {
 		int idx = 0;
 		int val = 0x76543210;
 		for (int i = 0; i < 7; i++) {
@@ -281,7 +281,7 @@ namespace Util {
 		return idx;
 	}
 
-	int getComb(char arr[], int mask, bool isEdge) {
+	int getComb(const char arr[], int mask, bool isEdge) {
 		int end = std::strlen(arr);
 		int idxC = 0, idxP = 0, r = 4, val = 0x0123;
 		for (int i = end; i >= 0; i--) {

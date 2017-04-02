@@ -33,7 +33,7 @@ void CoordinateCube::calcPruning(bool isPhase1) {
 				getPruning(UDSliceFlipPrun,
 					flip * N_SLICE + UDSliceConj[slice & 0x1ff][fsym])),
 		 			getPruning(TwistFlipPrun,
-					twist << 11 | CubieCube::FlipS2RF[flip << 3 | CubieCube::Sym8MultInv[fsym << 3 | tsym]]);
+					twist << 11 | CubieCube::FlipS2RF[flip << 3 | CubieCube::Sym8MultInv[fsym << 3 | tsym]]));
 	// twist multiplied by 2048
 	// flip is multiplied by 8 because CubieCube stores the symmetry class differently
 }
@@ -50,11 +50,11 @@ void CoordinateCube::calcPruning(bool isPhase1) {
 		table[indDiv8] = table[indDiv8] ^ xorMask;
 
 		*/
-void CoordinateCube::setPruning(int[] table, int index, int value) {
+void CoordinateCube::setPruning(int table[], int index, int value) {
 		 table[index >> 3] ^= (0xf ^ value) << ((index & 7) << 2);
 }
 
-int CoordinateCube::getPruning(int[] table, int index) {
+int CoordinateCube::getPruning(int table[], int index) {
 		return table[index >> 3] >> ((index & 7) << 2) & 0xf;
 }
 
@@ -351,7 +351,7 @@ void CoordinateCube::initPermCombPrun() {
 		);
 }
 
-int CoordinateCube::doMovePrun(CoordCube cc, int m, bool isPhase1) {
+int CoordinateCube::doMovePrun(CoordinateCube cc, int m, bool isPhase1) {
 		slice = UDSliceMove[cc.slice & 0x1ff][m] & 0x1ff;
 
 		flip = FlipMove[cc.flip][CubieCube::Sym8Move[m << 3 | cc.fsym]];

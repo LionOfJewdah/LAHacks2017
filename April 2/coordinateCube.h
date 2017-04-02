@@ -1,6 +1,6 @@
 #ifndef COORDINATECUBE_H
 #define COORDINATECUBE_H
-
+#include "cubieCube.h"
 #include <vector>
 #include <string>
 
@@ -73,7 +73,7 @@ private:
 	static void initSliceFlipPrun();
 
 	static void initRawSymPrun(
-	   int[] PrunTable, const int INV_DEPTH,
+	   int PrunTable[], const int INV_DEPTH,
 	   const std::vector<std::string>& RawMove, const std::vector<std::string>& RawConj,
 	   const std::vector<std::string>& SymMove, const std::string& SymState,
 	   const int PrunFlag

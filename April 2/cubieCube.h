@@ -2,6 +2,13 @@
 #define CUBIECUBE_H
 #include <string>
 
+class CubieCube;
+
+namespace Util {
+	void toCubieCube(char f[], CubieCube& ccRet);
+	std::string toFaceCube(CubieCube&);
+};
+
 class CubieCube {
 public:
 	CubieCube();
@@ -132,6 +139,8 @@ public:
 		return o;
 	}
 	friend class CoordinateCube;
+	friend void Util::toCubieCube(char f[], CubieCube& ccRet);
+	friend std::string Util::toFaceCube(CubieCube&);
 };
 
 #endif

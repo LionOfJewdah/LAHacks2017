@@ -6,7 +6,7 @@
 CC            = gcc
 CXX           = g++
 STD			  = -std=c++11
-CXXFLAGS      = $(STD) -g -Wall -W
+CXXFLAGS      = $(STD) -g -W
 GTEST_LL	  = -I /usr/include/gtest/ -l gtest -l gtest_main -pthread
 DEL_FILE      = rm -f
 DEL_DIR       = rmdir

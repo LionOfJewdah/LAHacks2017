@@ -24,7 +24,7 @@ char CubieCube::urfMove[6][18] = {
 
 int CubieCube::preMove[9] = {-1, Util::Rx1, Util::Rx3, Util::Fx1, Util::Fx3, Util::Lx1, Util::Lx3, Util::Bx1, Util::Bx3};
 
-char CubieCube::e2c[13] = {0, 0, 0, 0, 1, 3, 1, 3, 1, 3, 1, 3, 0, 0, 0, 0};
+char CubieCube::e2c[16] = {0, 0, 0, 0, 1, 3, 1, 3, 1, 3, 1, 3, 0, 0, 0, 0};
 
 CubieCube::CubieCube(int cperm, int twist, int eperm, int flip) {
 	for (int i = 0; i < 8; i++) {
@@ -94,7 +94,8 @@ void CubieCube::invCubieCube() {
 }
 
 // prod = a * b, Corner Only.
-void CubieCube::CornMult(CubieCube a, CubieCube b, CubieCube prod) {
+void CubieCube::CornMult(const CubieCube& a, const CubieCube& b,
+CubieCube& prod) {
 	for (int corn = 0; corn < 8; corn++) {
 		int oriA = a.ca[b.ca[corn] & 7] >> 3;
 		int oriB = b.ca[corn] >> 3;
@@ -209,11 +210,11 @@ void CubieCube::setTwist(int idx) {
 	int twst = 0;
 	for (int i = 6; i >= 0; i--) {
 		int val = idx % 3;
-		ca[i] = (char) (ca[i] & 0x7 | val << 3);
+		ca[i] = (char) ((ca[i] & 0x7 )| (val << 3));
 		twst += val;
 		idx /= 3;
 	}
-	ca[7] = (char) (ca[7] & 0x7 | ((15 - twst) % 3) << 3);
+	ca[7] = (char) ((ca[7] & 0x7 )| (((15 - twst) % 3) << 3));
 }
 
 int CubieCube::getTwistSym() {
@@ -406,18 +407,18 @@ void CubieCube::setUDSliceFlip(int idx) {
 	setUDSlice(idx >> 11);
 }
 
-int CubieCube::getUDSliceFlip() {
+int CubieCube::getUDSliceFlip() const {
 	return (getUDSlice() & 0x1ff) << 11 | getFlip();
 }
-
-int CubieCube::getUDSliceFlipSym() {
-	int flip = getFlipSym();
-	int fsym = flip & 0x7;
-	flip >>= 3;
-	int udslice = getUDSlice() & 0x1ff;
-	int udsliceflip = FlipSlice2UDSliceFlip[flip * 495 + CoordinateCube::UDSliceConj[udslice][fsym]];
-	return udsliceflip & 0xfffffff0 | SymMult[udsliceflip & 0xf][fsym << 1];
-}
+//
+// int CubieCube::getUDSliceFlipSym() {
+// 	int flip = getFlipSym();
+// 	int fsym = flip & 0x7;
+// 	flip >>= 3;
+// 	int udslice = getUDSlice() & 0x1ff;
+// 	int udsliceflip = FlipSlice2UDSliceFlip[flip * 495 + CoordinateCube::UDSliceConj[udslice][fsym]];
+// 	return udsliceflip & 0xfffffff0 | SymMult[udsliceflip & 0xf][fsym << 1];
+// }
 
 // ********************************************* Initialization functions *********************************************
 
@@ -549,31 +550,31 @@ void CubieCube::initFlipSym2Raw() {
 	assert(count == 336);
 }
 
-   void CubieCube::initTwistSym2Raw() {
-		CubieCube c;
-		CubieCube d;
-		int count = 0;
-		TwistR2S[2187];
-		for (int i = 0; i < 2187; i++) {
-			if (TwistR2S[i] != 0) {
-				continue;
-			}
-			c.setTwist(i);
-			for (int s = 0; s < 16; s += 2) {
-				CornConjugate(c, s, d);
-				int idx = d.getTwist();
-				if (idx == i) {
-					SymStateTwist[count] |= 1 << (s >> 1);
-				}
-				TwistR2S[idx] = (char) (count << 3 | s >> 1);
-				if (Search::EXTRA_PRUN_LEVEL > 0) {
-					TwistS2RF[count << 3 | s >> 1] = (char) idx;
-				}
-			}
-			TwistS2R[count++] = (char) i;
-		}
-		assert(count == 324);
-	}
+// void CubieCube::initTwistSym2Raw() {
+// ubieCube c;
+// ubieCube d;
+// nt count = 0;
+// wistR2S[2187];
+// or (int i = 0; i < 2187; i++) {
+// if (TwistR2S[i] != 0) {
+// 	continue;
+// }
+// c.setTwist(i);
+// for (int s = 0; s < 16; s += 2) {
+// 	CornConjugate(c, s, d);
+// 	int idx = d.getTwist();
+// 	if (idx == i) {
+// 		SymStateTwist[count] |= 1 << (s >> 1);
+// 	}
+// 	TwistR2S[idx] = (char) (count << 3 | s >> 1);
+// 	if (Search::EXTRA_PRUN_LEVEL > 0) {
+// 		TwistS2RF[count << 3 | s >> 1] = (char) idx;
+// 	}
+// }
+// TwistS2R[count++] = (char) i;
+//
+// ssert(count == 324);
+//
 
 char CubieCube::Perm2Comb[2768];
 
@@ -607,34 +608,34 @@ void CubieCube::initPermSym2Raw() {
 	assert(count == 2768);
 }
 
-void CubieCube::initUDSliceFlipSym2Raw() {
-	CubieCube c;
-	CubieCube d;
-	int occ[2048 * 495 >> 5];
-	int count = 0;
-	for (int i = 0; i < 2048 * 495; i++) {
-		if ((occ[i >> 5] & 1 << (i & 0x1f)) != 0) {
-			continue;
-		}
-		c.setUDSliceFlip(i);
-		for (int s = 0; s < 16; s++) {
-			EdgeConjugate(c, s, d);
-			int idx = d.getUDSliceFlip();
-			if (idx == i) {
-				SymStateUDSliceFlip[count] |= 1 << s;
-			}
-			occ[idx >> 5] |= 1 << (idx & 0x1f);
-			// int fidx = Arrays.binarySearch(FlipS2R, (char) (idx & 0x7ff));
-			int fidx = *std::upper_bound(std::begin(FlipS2R), std::end(FlipS2R),
-			 	(unsigned short) (idx & 0x7ff));
-			if (fidx >= 0) {
-				FlipSlice2UDSliceFlip[fidx * CoordinateCube::N_SLICE + (idx >> 11)] = count << 4 | s;
-			}
-		}
-		UDSliceFlipS2R[count++] = i;
-	}
-	assert(count == 64430);
-}
+// void CubieCube::initUDSliceFlipSym2Raw() {
+// 	CubieCube c;
+// 	CubieCube d;
+// 	int occ[2048 * 495 >> 5];
+// 	int count = 0;
+// 	for (int i = 0; i < 2048 * 495; i++) {
+// 		if ((occ[i >> 5] & 1 << (i & 0x1f)) != 0) {
+// 			continue;
+// 		}
+// 		c.setUDSliceFlip(i);
+// 		for (int s = 0; s < 16; s++) {
+// 			EdgeConjugate(c, s, d);
+// 			int idx = d.getUDSliceFlip();
+// 			if (idx == i) {
+// 				SymStateUDSliceFlip[count] |= 1 << s;
+// 			}
+// 			occ[idx >> 5] |= 1 << (idx & 0x1f);
+// 			// int fidx = Arrays.binarySearch(FlipS2R, (char) (idx & 0x7ff));
+// 			int fidx = *std::upper_bound(std::begin(FlipS2R), std::end(FlipS2R),
+// 			 	(unsigned short) (idx & 0x7ff));
+// 			if (fidx >= 0) {
+// 				FlipSlice2UDSliceFlip[fidx * CoordinateCube::N_SLICE + (idx >> 11)] = count << 4 | s;
+// 			}
+// 		}
+// 		UDSliceFlipS2R[count++] = i;
+// 	}
+// 	assert(count == 64430);
+// }
 
 std::string CubieCube::toString() const {
 	std::string thePussy;
