@@ -50,8 +50,16 @@ public:
 		DF = 14, DR = 16, DB = 18, DL = 20
 	};
 private:
-    corner mCorners[8];
-    edge_piece mEdges[12];
+    struct corner_o {
+        corner co;
+        char o;
+    };
+    struct edge_o {
+        edge_piece edge;
+        char o;
+    };
+    corner_o mCorners[8];
+    edge_o mEdges[12];
     bool _isSolved;
     void checkSolved();
 	using Rot = Cube& (Cube::*)(void);
