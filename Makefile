@@ -22,7 +22,7 @@ OUTF_DIR			= cubeOutput
 
 ####### Files
 
-SOURCES       = Cube.cpp
+SOURCES       = cube.cpp
 
 HEADERS		  	= cube.h
 
@@ -30,9 +30,9 @@ TEST_SOURCES  = cubeTest.cpp
 
 OBJECTS   		= cube.o
 
-EXECS		  		= $(BIN_DIR)/cubeTest.out #$(BIN_DIR)/$(TARGET)
+EXECS		  = $(TEST_DIR)/cubeTest #$(BIN_DIR)/$(TARGET)
 
-TEST_EXECS    = $(TEST_DIR)/cubeTest.out
+TEST_EXECS    = $(TEST_DIR)/cubeTest
 
 first: all
 ####### Implicit rules
@@ -49,27 +49,17 @@ else
 all: cubeTest
 endif
 
-cube.o: cube.cpp cube.h
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
+cube.o: cube.cpp cube.h $(BIN_DIR)/.dirstamp
+	$(CXX) -c $(CXXFLAGS) -o $(BIN_DIR)/$@ $<
 
-cubeTest: cubeTest.cpp cube.cpp
-	$(CXX) $(CXXFLAGS) $(GTEST_LL) -o $@ $<
+cubeTest: $(TEST_DIR)/.dirstamp
+
+cubeTest: cubeTest.cpp $(BIN_DIR)/cube.o
+	$(CXX) $(CXXFLAGS) -o $(TEST_DIR)/$@ $^ $(GTEST_LL)
+	gdb $(TEST_DIR)/$@
 
 MAIN_OBJECTS = main.o cube.o
 
-main.out: $(MAIN_OBJECTS) $(HEADERS) $(BIN_DIR)/.dirstamp
-		$(LINK) $(LFLAGS) -o $(BIN_DIR)/$@ $(MAIN_OBJECTS)
-		gdb $(BIN_DIR)/$@
-
-gtest_cube.out: gtest_cube.cpp Cube.hpp cube.o $(TEST_DIR)/.dirstamp
-		$(CXX) -g -Wall $(STD) $(CLARGS) -o $(TEST_DIR)/$@ $< $(GTEST_LL) \
-					cube.o
-		gdb $(TEST_DIR)/$@
-
-harder_gtests.out: harder_gtests.cpp Cube.hpp cube.o $(TEST_DIR)/.dirstamp
-		$(CXX) -g -Wall $(STD) $(CLARGS) -o $(TEST_DIR)/$@ $< $(GTEST_LL) \
-					cube.o
-		gdb $(TEST_DIR)/$@
 
 #======================================
 # cleaning tools and dirstamps

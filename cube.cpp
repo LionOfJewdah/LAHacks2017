@@ -290,7 +290,7 @@ void Cube::randomPermute() {
     }
     checkSolved();
     // if not solved, permute again, 20 times, until not solved
-    while (this->is_solved()) {
+    while (this->isSolved()) {
         for (int i = 0; i < 20; i++) {
             Rot r = rotations[rand_up_to(numRotTypes)];
             (this->*r)();
