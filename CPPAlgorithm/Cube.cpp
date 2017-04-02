@@ -593,12 +593,10 @@ bool Cube::Thistlethwaite()
 			T45STAGE(4,IsSolvedCubieModel,15,SolveThistlethwaiteG3G4,trace);
 		}
 	}
-
-	if (false == IsSolved()) {
+	if (!IsSolved()) {
 		SetCube(ptmp);
 		ret = false;
 	}
-
 	return ret;
 }
 
