@@ -44,7 +44,7 @@ first: all
 
 ifdef TARGET
 all: $(TARGET)
-	gdb $(TARGET)
+	$(TARGET)
 else
 all: cubeTest
 endif
@@ -52,11 +52,9 @@ endif
 cube.o: cube.cpp cube.h $(BIN_DIR)/.dirstamp
 	$(CXX) -c $(CXXFLAGS) -o $(BIN_DIR)/$@ $<
 
-cubeTest: $(TEST_DIR)/.dirstamp
-
 cubeTest: cubeTest.cpp $(BIN_DIR)/cube.o
 	$(CXX) $(CXXFLAGS) -o $(TEST_DIR)/$@ $^ $(GTEST_LL)
-	gdb $(TEST_DIR)/$@
+	$(TEST_DIR)/$@
 
 MAIN_OBJECTS = main.o cube.o
 
