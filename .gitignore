@@ -29,3 +29,4 @@
 *.app
 
 randomPermute.cpp
+tests/cubeTest
