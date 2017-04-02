@@ -16,7 +16,7 @@ CLDEFINES	  =
 
 ####### Output directory
 BIN_DIR   	  = bin
-TEST_DIR	  	= ../tests
+TEST_DIR	  	= tests
 # TARGET        = cubeTest
 #directory for (long) files from calling Hashtable::reportAll()
 OUTF_DIR			= ../cubeOutput
@@ -32,9 +32,14 @@ first: all
 
 .cpp.o:
 	reset
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(BIN_DIR)/"$@" "$<"
 
 ####### Build rules
+
+search.o: search.cpp
+coordinateCube.o: coordinateCube.cpp
+cubieCube.o: cubieCube.cpp
+
 
 
 #======================================
