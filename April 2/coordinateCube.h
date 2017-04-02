@@ -48,9 +48,9 @@ private:
 	static int EPermCCombPrun[N_COMB * N_PERM_SYM / 8];
 
 public:
-	//static void init();
-	//void calcPruning(boolean isPhase1);
-	int doMovePrun(CoordinateCube cc, int m, boolean isPhase1);
+	static void init();
+	void calcPruning(bool isPhase1);
+	int doMovePrun(CoordinateCube cc, int m, bool isPhase1);
 
 	static void setPruning(int table[], int index, int value);
 	static int getPruning(int table[], int index);
@@ -85,6 +85,7 @@ private:
 	int fsym;
 	int slice;
 	int prun;
+	friend class CubieCube;
 };
 
 #endif

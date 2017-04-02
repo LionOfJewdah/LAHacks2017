@@ -131,6 +131,7 @@ public:
 		o << cc.toString();
 		return o;
 	}
+	friend class CoordinateCube;
 };
 
 #endif

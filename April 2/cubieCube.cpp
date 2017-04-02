@@ -2,6 +2,7 @@
 #include "coordinateCube.h"
 #include <cassert>
 #include "search.h"
+#include <algorithm>
 
 char CubieCube::FlipR2S[2048];// = new char[2048];
 char CubieCube::TwistR2S[2048];// = new char[2187];
@@ -30,7 +31,7 @@ CubieCube::CubieCube(int cperm, int twist, int eperm, int flip) {
 		ea[i] = 2*i;
 	}
 	for (int i = 8; i < 12; i++) ea[i] = 2*i;
-	temps = null;
+	temps = nullptr;
 	this->setCPerm(cperm);
 	this->setTwist(twist);
 	Util::setNPerm(ea, eperm, 12, true);
@@ -183,10 +184,9 @@ int CubieCube::getFlipSym() {
 		temps = new CubieCube();
 	}
 	for (int k = 0; k < 16; k += 2) {
-		EdgeConjugate(*this, SymInv[k], temps);
-		// TODO: sub std::upper_bound;
-		// int idx = Arrays.binarySearch(FlipS2R, (char) temps.getFlip());
-		int idx = std::upper_bound(FlipS2R, (char) temps->getFlip());
+		EdgeConjugate(*this, SymInv[k], *temps);
+		int idx = *std::upper_bound(std::begin(FlipS2R), std::end(FlipS2R),
+			(unsigned short) temps->getFlip());
 		if (idx >= 0) {
 			if (temps) delete temps;
 			return idx << 3 | k >> 1;
@@ -196,7 +196,7 @@ int CubieCube::getFlipSym() {
 	return 0;
 }
 
-int CubieCube::getTwist() {
+int CubieCube::getTwist() const {
 	int idx = 0;
 	for (int i = 0; i < 7; i++) {
 		idx += (idx << 1) + (ca[i] >> 3);
@@ -216,19 +216,18 @@ void CubieCube::setTwist(int idx) {
 }
 
 int CubieCube::getTwistSym() {
-	if (TwistR2S != null) {
-		return TwistR2S[getTwist()];
-	}
+	// if (TwistR2S != null) {
+	// 	return TwistR2S[getTwist()];
+	// }
 	if (!temps) {
 		temps = new CubieCube();
 	}
 	for (int k = 0; k < 16; k += 2) {
 		CornConjugate(*this, SymInv[k], *temps);
-		// TODO: std::upper_bound
-		// int idx = Arrays.binarySearch(TwistS2R, (char) temps->getTwist());
-		int idx = std::upper_bound(TwistS2R, (char) temps->getTwist());
+		int idx = *std::upper_bound(std::begin(TwistS2R), std::end(TwistS2R),
+		 	(unsigned short) temps->getTwist());
 		if (idx >= 0) {
-			delete temps;
+			if (temps) delete temps;
 			return idx << 3 | k >> 1;
 		}
 	}
@@ -274,9 +273,9 @@ int CubieCube::getCPermSym() {
 		temps = new CubieCube();
 	}
 	for (int k = 0; k < 16; k++) {
-		CornConjugate(this, SymInv[k], temps);
-		// int idx = Arrays.binarySearch(EPermS2R, (char) temps.getCPerm());
-		int idx = std::upper_bound(EPermS2R, (char) temps->getCPerm());
+		CornConjugate(*this, SymInv[k], *temps);
+		int idx = *std::upper_bound(std::begin(EPermS2R), std::end(EPermS2R),
+			(unsigned short) temps->getCPerm());
 		if (idx >= 0) {
 			delete temps;
 			return idx << 4 | k;
@@ -302,9 +301,8 @@ int CubieCube::getEPermSym() {
 		temps = new CubieCube();
 	}
 	for (int k = 0; k < 16; k++) {
-		EdgeConjugate(this, SymInv[k], temps);
-		// int idx = Arrays.binarySearch(EPermS2R, (char) temps.getEPerm());
-		int idx = std::upper_bound(EPermS2R, (char) temps->getEPerm());
+		EdgeConjugate(*this, SymInv[k], *temps);
+		int idx = *std::upper_bound(std::begin(EPermS2R), std::end(EPermS2R), (char) temps->getEPerm());
 		if (idx >= 0) {
 		delete temps;
 			return idx << 4 | k;
@@ -375,9 +373,9 @@ long CubieCube::selfSymmetry() {
 	long sym = 0L;
 	for (int i = 0; i < 48; i++) {
 		CornConjugate(c, SymInv[i % 16], d);
-		if (d.equalsCorn(this)) {
+		if (this->equalsCorn(d)) {
 			EdgeConjugate(c, SymInv[i % 16], d);
-			if (d.equalsEdge(this)) {
+			if (this->equalsEdge(d)) {
 				sym |= 1L << i;
 			}
 		}
@@ -547,7 +545,7 @@ void CubieCube::initFlipSym2Raw() {
 		}
 		FlipS2R[count++] = (char) i;
 	}
-	assert count == 336;
+	assert(count == 336);
 }
 
    void CubieCube::initTwistSym2Raw() {
@@ -626,7 +624,8 @@ void CubieCube::initUDSliceFlipSym2Raw() {
 			}
 			occ[idx >> 5] |= 1 << (idx & 0x1f);
 			// int fidx = Arrays.binarySearch(FlipS2R, (char) (idx & 0x7ff));
-			int fidx = std::upper_bound(FlipS2R, (unsigned char) (idx & 0x7ff));
+			int fidx = *std::upper_bound(std::begin(FlipS2R), std::end(FlipS2R),
+			 	(unsigned short) (idx & 0x7ff));
 			if (fidx >= 0) {
 				FlipSlice2UDSliceFlip[fidx * CoordinateCube::N_SLICE + (idx >> 11)] = count << 4 | s;
 			}
