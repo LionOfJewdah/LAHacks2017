@@ -51,14 +51,14 @@ constexpr int solved_edge_config[]   = {2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18,
 
 Cube::Cube() : //mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
     //mEdges({2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20}),
-    isSolved(true)
+    _isSolved(true)
 {
     for (auto i = 0; i < 8; i++)  mCorners[i] = (corner)solved_corner_config[i];
     for (auto i = 0; i < 12; i++) mEdges[i] = (edge_piece)solved_edge_config[i];
     // isSolved = true;
 }
 
-Cube::Cube(bool b) : isSolved(true) {
+Cube::Cube(bool b) : _isSolved(true) {
     for (auto i = 0; i < 8; i++)  mCorners[i] = (corner)solved_corner_config[i];
     for (auto i = 0; i < 12; i++) mEdges[i] = (edge_piece)solved_edge_config[i];
     if (b == RANDOM_CUBE) {
@@ -70,16 +70,16 @@ Cube::Cube(bool b) : isSolved(true) {
 Cube::Cube(const int (&_corners)[8], const int (&_edges)[12])
     : //mCorners({1, 3, 5, 7, 13, 15, 18, 19}),
     //mEdges({2, 4, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20}),
-    isSolved(false)
+    _isSolved(false)
 {
     for (auto i = 0; i < 8; i++)  mCorners[i] = (corner) _corners[i];
     for (auto i = 0; i < 12; i++) mEdges[i]   = (edge_piece) _edges[i];
     checkSolved();
 }
 
-bool Cube::is_solved() const
+bool Cube::isSolved() const
 {
-	return isSolved;
+	return _isSolved;
 }
 
 //typename Cube::edge_piece
@@ -99,18 +99,18 @@ const typename Cube::corner (&Cube::get_corners() const) [8]
 void Cube::checkSolved() {
     for(int i = 0; i < 8; i++) {
         if (solved_corner_config[i] != mCorners[i]) {
-            isSolved = false;
+            _isSolved = false;
             return;
         }
     }
 
     for(int i = 0; i < 12; i++) {
         if (solved_edge_config[i] != mEdges[i]) {
-            isSolved = false;
+            _isSolved = false;
             return;
         }
     }
-    isSolved = true;
+    _isSolved = true;
 }
 
 bool Cube::operator==(const Cube& rhs) const {

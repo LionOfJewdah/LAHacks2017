@@ -45,7 +45,7 @@ public:
 private:
     corner mCorners[8];
     edge_piece mEdges[12];
-    bool isSolved;
+    bool _isSolved;
     void checkSolved();
 	using Rot = Cube& (Cube::*)(void);
 	void randomPermute();
@@ -61,7 +61,7 @@ public:
     const corner  (& get_corners() const)[8] ;
     const edge_piece (& get_edges() const)[12];
 
-    bool is_solved() const;
+    bool isSolved() const;
     bool operator==(const Cube& rhs) const;
 
     Cube& turnUp();
