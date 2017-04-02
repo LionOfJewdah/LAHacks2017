@@ -85,7 +85,7 @@ initTwistMove();pp();      // provides a lookup table for twist values of the cu
 initCorn6PosMove();pp();
 initEdge4PosMove();pp();
 initEdge6PosMove();pp();
-initSymFlipSliceClassMove();pp(); // coordcube.c line 396 
+initSymFlipSliceClassMove();pp(); // coordcube.c line 396 - allows lookup of stuff by symFlipSlice coordinate 
 initMovesCloserToTarget();pp();
 initNextMove();pp();
 printf("\r\n");
