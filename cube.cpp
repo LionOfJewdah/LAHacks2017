@@ -33,6 +33,22 @@ constexpr char* cubieNames[] =  { /*0*/ "",
     /*19*/  "[19]: yellow-blue-orange corner",
     /*20*/  "[20]: orange-yellow edge",
 };
+
+#define SAY_MOVING(a, b, c, d, e, f, g, h)\
+    std::cout << "Moving " << names[mCorners[(a)]] << " --> "
+        << names[mCorners[(b)]] << " --> " << names[mCorners[(c)]] << " --> "\
+        << names[mCorners[(d)]] << " --> " << names[mCorners[(a)]] << ";\nand"\
+        << names[mEdges[(e)]] << " --> " << names[mCorners[(f)]] << " --> "\
+        << names[mEdges[(g)]] << " --> " << names[mCorners[(h)]] << " --> "\
+        << names[mEdges[(e)]] << "." << std::endl;
+
+#define SAY_2MOVING(a, b, c, d, e, f, g, h)\
+    std::cout << "Moving " << names[mCorners[(a)]] << " <--> "
+        << names[mCorners[(c)]] << " ; " << names[mCorners[(b)]] << " <--> " 
+        << names[mCorners[(d)]] << ";\nand"\
+        << names[mEdges[(e)]] << " <--> " << names[mCorners[(g)]] << " ; "\
+        << names[mEdges[(f)]] << " <--> " << names[mCorners[(h)]] << "." << std::endl;
+
 #endif // DEBUG
 
 extern const Cube totallySolvedCube;
@@ -125,7 +141,8 @@ bool Cube::operator==(const Cube& rhs) const {
 Cube& Cube::turnUp()
 {
     #ifdef DEBUG
-    std::cout << "Performing U rotation (turnUp()). Moving " << std::endl;
+    std::cout << "Performing U rotation (turnUp())." << std::endl;
+    SAY_MOVING(0, 1, 2, 3, 0, 1, 2, 3);
     #endif
     quarterTurn(mCorners[0], mCorners[1], mCorners[2], mCorners[3]);
     quarterTurn(mEdges[0], mEdges[1], mEdges[2], mEdges[3]);
@@ -135,6 +152,10 @@ Cube& Cube::turnUp()
 
 Cube& Cube::turnUp2()
 {
+    #ifdef DEBUG
+    std::cout << "Performing U2 rotation (turnUp2())." << std::endl;
+    SAY_2MOVING(0, 1, 2, 3, 0, 1, 2, 3);
+    #endif
     halfTurn(mCorners[0], mCorners[1], mCorners[2], mCorners[3]);
     halfTurn(mEdges[0], mEdges[1], mEdges[2], mEdges[3]);
     checkSolved();
@@ -143,6 +164,10 @@ Cube& Cube::turnUp2()
 
 Cube& Cube::turnUpI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing U' rotation (turnUpI())." << std::endl;
+    SAY_MOVING(3, 2, 1, 0, 3, 2, 1, 0);
+    #endif
     quarterTurn(mCorners[3], mCorners[2], mCorners[1], mCorners[0]);
     quarterTurn(mEdges[3], mEdges[2], mEdges[1], mEdges[0]);
     checkSolved();
@@ -151,6 +176,10 @@ Cube& Cube::turnUpI()
 
 Cube& Cube::turnDown()
 {
+    #ifdef DEBUG
+    std::cout << "Performing D rotation (turnDown())." << std::endl;
+    SAY_MOVING(7, 6, 5, 4, 10, 9, 8, 11);
+    #endif
     quarterTurn(mCorners[7], mCorners[6], mCorners[5], mCorners[4]);
     quarterTurn(mEdges[10], mEdges[9], mEdges[8], mEdges[11]);
     checkSolved();
@@ -159,6 +188,10 @@ Cube& Cube::turnDown()
 
 Cube& Cube::turnDown2()
 {
+    #ifdef DEBUG
+    std::cout << "Performing D2 rotation (turnDown2())." << std::endl;
+    SAY_2MOVING(7, 6, 5, 4, 10, 9, 8, 11);
+    #endif
     halfTurn(mCorners[7], mCorners[6], mCorners[5], mCorners[4]);
     halfTurn(mEdges[10], mEdges[9], mEdges[8], mEdges[11]);
     checkSolved();
@@ -167,6 +200,10 @@ Cube& Cube::turnDown2()
 
 Cube& Cube::turnDownI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing D' rotation (turnDownI())." << std::endl;
+    SAY_MOVING(4, 5, 6, 7, 11, 8, 9, 10);
+    #endif
     quarterTurn(mCorners[4], mCorners[5], mCorners[6], mCorners[7]);
     quarterTurn(mEdges[11], mEdges[8], mEdges[9], mEdges[10]);
     checkSolved();
@@ -175,6 +212,10 @@ Cube& Cube::turnDownI()
 
 Cube& Cube::turnFront()
 {
+    #ifdef DEBUG
+    std::cout << "Performing F rotation (turnFront())." << std::endl;
+    SAY_MOVING(4, 5, 1, 0, 8, 5, 0, 4);
+    #endif
     quarterTurn(mCorners[4], mCorners[5], mCorners[1], mCorners[0]);
     quarterTurn(mEdges[8], mEdges[5], mEdges[0], mEdges[4]);
     checkSolved();
@@ -183,6 +224,10 @@ Cube& Cube::turnFront()
 
 Cube& Cube::turnFront2()
 {
+    #ifdef DEBUG
+    std::cout << "Performing F2 rotation (turnFront2())." << std::endl;
+    SAY_2MOVING(4, 5, 1, 0, 8, 5, 0, 4);
+    #endif
     halfTurn(mCorners[4], mCorners[5], mCorners[1], mCorners[0]);
     halfTurn(mEdges[8], mEdges[5], mEdges[0], mEdges[4]);
     checkSolved();
@@ -191,6 +236,10 @@ Cube& Cube::turnFront2()
 
 Cube& Cube::turnFrontI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing F' rotation (turnFrontI())." << std::endl;
+    SAY_MOVING(0, 1, 5, 4, 4, 0, 5, 8);
+    #endif
     quarterTurn(mCorners[0], mCorners[1], mCorners[5], mCorners[4]);
     quarterTurn(mEdges[4], mEdges[0], mEdges[5], mEdges[8]);
     checkSolved();
@@ -199,6 +248,10 @@ Cube& Cube::turnFrontI()
 
 Cube& Cube::turnBack()
 {
+    #ifdef DEBUG
+    std::cout << "Performing B rotation (turnBack())." << std::endl;
+    SAY_MOVING(6, 7, 3, 2, 10, 7, 2, 6);
+    #endif
     quarterTurn(mCorners[6], mCorners[7], mCorners[3], mCorners[2]);
     quarterTurn(mEdges[10], mEdges[7], mEdges[2], mEdges[6]);
     checkSolved();
@@ -207,6 +260,9 @@ Cube& Cube::turnBack()
 
 Cube& Cube::turnBack2()
 {
+    std::cout << "Performing B2 rotation (turnBack2())." << std::endl;
+    SAY_2MOVING(6, 7, 3, 2, 10, 7, 2, 6);
+    #endif
     halfTurn(mCorners[6], mCorners[7], mCorners[3], mCorners[2]);
     halfTurn(mEdges[10], mEdges[7], mEdges[2], mEdges[6]);
     checkSolved();
@@ -215,6 +271,10 @@ Cube& Cube::turnBack2()
 
 Cube& Cube::turnBackI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing B' rotation (turnBackI())." << std::endl;
+    SAY_MOVING(2, 3, 7, 6, 6, 2, 7, 10);
+    #endif
     quarterTurn(mCorners[2], mCorners[3], mCorners[7], mCorners[6]);
     quarterTurn(mEdges[6], mEdges[2], mEdges[7], mEdges[10]);
     checkSolved();
@@ -223,6 +283,10 @@ Cube& Cube::turnBackI()
 
 Cube& Cube::turnLeft()
 {
+    #ifdef DEBUG
+    std::cout << "Performing L rotation (turnLeft())." << std::endl;
+    SAY_MOVING(7, 4, 0, 3, 11, 4, 3, 7);
+    #endif
     quarterTurn(mCorners[7], mCorners[4], mCorners[0], mCorners[3]);
     quarterTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
     checkSolved();
@@ -231,6 +295,10 @@ Cube& Cube::turnLeft()
 
 Cube& Cube::turnLeft2()
 {
+    #ifdef DEBUG
+    std::cout << "Performing L2 rotation (turnLeft2())." << std::endl;
+    SAY_2MOVING(7, 4, 0, 3, 11, 4, 3, 7);
+    #endif
     halfTurn(mCorners[7], mCorners[4], mCorners[0], mCorners[3]);
     quarterTurn(mEdges[11], mEdges[4], mEdges[3], mEdges[7]);
     checkSolved();
@@ -239,6 +307,10 @@ Cube& Cube::turnLeft2()
 
 Cube& Cube::turnLeftI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing L' rotation (turnLeftI())." << std::endl;
+    SAY_MOVING(3, 0, 4, 7, 7, 3, 4, 11);
+    #endif
     quarterTurn(mCorners[3], mCorners[0], mCorners[4], mCorners[7]);
     quarterTurn(mEdges[7], mEdges[3], mEdges[4], mEdges[11]);
     checkSolved();
@@ -247,6 +319,10 @@ Cube& Cube::turnLeftI()
 
 Cube& Cube::turnRight()
 {
+    #ifdef DEBUG
+    std::cout << "Performing R rotation (turnRight())." << std::endl;
+    SAY_MOVING(5, 6, 2, 1, 9, 6, 1, 5);
+    #endif
     quarterTurn(mCorners[5], mCorners[6], mCorners[2], mCorners[1]);
     quarterTurn(mEdges[9], mEdges[6], mEdges[1], mEdges[5]);
     checkSolved();
@@ -255,6 +331,10 @@ Cube& Cube::turnRight()
 
 Cube& Cube::turnRight2()
 {
+    #ifdef DEBUG
+    std::cout << "Performing R2 rotation (turnRight2())." << std::endl;
+    SAY_2MOVING(5, 6, 2, 1, 9, 6, 1, 5);
+    #endif
     halfTurn(mCorners[5], mCorners[6], mCorners[2], mCorners[1]);
     halfTurn(mEdges[9], mEdges[6], mEdges[1], mEdges[5]);
     checkSolved();
@@ -263,6 +343,10 @@ Cube& Cube::turnRight2()
 
 Cube& Cube::turnRightI()
 {
+    #ifdef DEBUG
+    std::cout << "Performing R' rotation (turnRightI())." << std::endl;
+    SAY_MOVING(1, 2, 6, 5, 5, 1, 6, 9);
+    #endif
     quarterTurn(mCorners[1], mCorners[2], mCorners[6], mCorners[5]);
     quarterTurn(mEdges[5], mEdges[1], mEdges[6], mEdges[9]);
     checkSolved();
